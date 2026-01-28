@@ -33,7 +33,10 @@
   --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.22);
 
   --radius: 14px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
   --radius-sm: 10px;
+  --transition: 0.2s ease;
 }
 * {
   box-sizing: border-box;
@@ -959,7 +962,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 12px;
+}
+
+.executive-summary__header h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
 }
 
 .executive-summary__grid {
