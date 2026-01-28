@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Isıtma Gücü Hesaplama</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; }
+    label { display:block; margin-top: 8px; }
+    input { width: 100%; padding: 4px; margin-top: 4px; }
+  </style>
+<link rel="stylesheet" href="./assets/styles/mtn-theme.css">
+</head>
+<body>
+  <h1>Isıtma Gücü Hesaplama</h1>
+  <p>Bu araç, bir odanın yaklaşık ısıtma gücü ihtiyacını hesaplar.</p>
+  <label>
+    Oda Alanı (m²)
+    <input type="number" id="odaAlan" placeholder="Örn. 30" />
+  </label>
+  <label>
+    Isı İhtiyacı (W/m²)
+    <input type="number" id="isiIhtiyaci" placeholder="Örn. 100" />
+  </label>
+  <button onclick="hesaplaIsitma()">Hesapla</button>
+  <p id="isitmaSonuc"></p>
+  <script>
+    function hesaplaIsitma() {
+      var alan = parseFloat(document.getElementById('odaAlan').value || '0');
+      var ihtiyac = parseFloat(document.getElementById('isiIhtiyaci').value || '0');
+      if (alan <= 0 || ihtiyac <= 0) {
+        document.getElementById('isitmaSonuc').textContent = 'Lütfen geçerli alan ve ısı ihtiyacı girin.';
+        return;
+      }
+      var sonuc = alan * ihtiyac;
+      document.getElementById('isitmaSonuc').textContent = 'Toplam Isıtma Gücü: ' + sonuc.toFixed(0) + ' W';
+    }
+  </script>
+</body>
+</html>

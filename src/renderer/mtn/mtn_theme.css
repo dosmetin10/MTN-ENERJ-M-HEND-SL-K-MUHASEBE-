@@ -1,0 +1,1259 @@
+/* MTN Kurumsal Metalik Mavi Tema – Okunabilirlik + Taşma Onarımı
+   Bu katman, projedeki sabit yüzey renklerini (styles.css) tema değişkenlerine bağlar.
+   Varsayılan: MTN Metalik Mavi (koyu) */
+
+/* Varsayılan tema: Kurumsal Beyaz (örnek ERP ekran uyumu)
+   Not: Kullanıcı Ayarlar > Tema'dan Koyu/MTN seçebilir. */
+:root{
+  color-scheme: light;
+
+  /* === MTN ERP Kurumsal Light Tema === */
+  --bg: #F6F8FC;          /* Genel arka plan */
+  --bg-2: #F6F8FC;
+  --panel: #FFFFFF;       /* Kart/panel */
+  --panel-2: #FFFFFF;
+
+  --ink: #111827;         /* Metin ana */
+  --muted: #475569;       /* Metin ikincil */
+  --text: #111827;
+
+  --blue: #0B1E3B;        /* Ana kurumsal renk */
+  --blue-2: #07162B;
+  --primary: var(--blue);
+  --primary-dark: var(--blue-2);
+
+  --gold: #D4AF37;        /* Premium */
+  --ring: rgba(11, 30, 59, 0.30);
+
+  --border: #E4EAF2;
+  --border-2: rgba(212, 175, 55, 0.55);
+
+  --shadow: 0 10px 24px rgba(2, 6, 23, 0.10);
+  --shadow-soft: 0 6px 16px rgba(2, 6, 23, 0.08);
+
+  /* Tablo / Form */
+  --mtn-table-head: #F1F5F9;
+  --mtn-zebra-1: #FFFFFF;
+  --mtn-zebra-2: #F8FAFC;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+
+  /* Buton */
+  --mtn-title: #0B1E3B;
+  --mtn-btn-text: #FFFFFF;
+}
+
+/* === Global okunabilirlik (ZORUNLU) === */
+html, body{
+  background: #F6F8FC !important;
+  color: #111827 !important;
+}
+
+body{
+  font-family: "Inter","Segoe UI",system-ui,sans-serif;
+  line-height: 1.45;
+}
+
+/* Arka plan açık ise text her zaman koyu */
+:where(a, label, th, td, button, input, select, textarea){
+  color: inherit;
+}
+
+h1,h2,h3,h4,h5,h6{
+  color: #0B1E3B !important;
+}
+
+/* Placeholder net ve okunur */
+input::placeholder, textarea::placeholder{
+  color: #64748B !important;
+  opacity: 1 !important;
+}
+
+/* Form bileşenleri */
+input, textarea, select{
+  background: #FFFFFF !important;
+  color: #111827 !important;
+  border: 1px solid #E4EAF2 !important;
+}
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
+  border-color: rgba(11,30,59,0.55) !important;
+  box-shadow: 0 0 0 3px rgba(11,30,59,0.12) !important;
+}
+
+/* Link rengi (kurumsal) */
+a{
+  color: #0B1E3B;
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
+
+/* Beyaz zeminde beyaz yazı kalmasın */
+.card, .panel, .table-card, .info-card, .action-card, .modal, .toast{
+  color: #111827 !important;
+}
+/* Taşma fix: yatay kayma istemiyoruz */
+html, body{
+  overflow-x: hidden;
+}
+
+/* Genel okunabilirlik */
+body{
+  background: var(--bg) !important;
+  color: var(--ink) !important;
+}
+.topbar h1{ color: var(--mtn-title) !important; }
+.muted{ color: var(--muted) !important; }
+
+/* Ana yüzeyleri değişkenlere bağla (en kritik onarım) */
+.topbar,
+.content,
+.module,
+.panel,
+.table-card,
+.info-card,
+.action-card,
+.assistant-live,
+.modal__content,
+.drawer,
+.card{
+  background: var(--panel) !important;
+  color: var(--ink) !important;
+  border-color: var(--border) !important;
+}
+
+/* Sidebar kurumsal */
+.sidebar{
+  background: var(--sidebar) !important;
+  color: var(--ink) !important;
+  border-right: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+.menu__item,
+.menu__group-header,
+.menu__subitem,
+.menu__action{
+  color: var(--ink) !important;
+}
+.menu__item--active,
+.menu__subitem.is-active{
+  border: 1px solid var(--border-2) !important;
+  background: rgba(47,107,255,0.12) !important;
+}
+.menu__group .menu__chev{ color: var(--muted) !important; }
+
+/* Form alanları okunur */
+input, select, textarea, .search{
+  background: var(--panel-2) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--border) !important;
+}
+input::placeholder, textarea::placeholder{
+  color: rgba(100,116,139,0.75) !important;
+}
+input:focus, select:focus, textarea:focus{
+  outline: none !important;
+  box-shadow: 0 0 0 3px var(--ring) !important;
+  border-color: var(--border-2) !important;
+}
+
+/* Butonlar */
+button, .btn, .mtn-btn{
+  color: var(--ink);
+}
+button.primary, .btn.primary{
+  background: var(--primary) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: var(--mtn-btn-text) !important;
+}
+button.ghost, .btn.ghost{
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+}
+button.ghost:hover, .btn.ghost:hover{
+  background: #F1F5F9 !important;
+}
+
+/* İçerik alanı arkaplanı (panel değil, sayfa rengi) */
+.content{
+  background: var(--bg) !important;
+}
+
+/* Topbar saat etiketi */
+.topbar__clock{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border) !important;
+  background: var(--panel-2) !important;
+  color: var(--ink) !important;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .2px;
+  min-width: 140px;
+  cursor: default;
+}
+
+/* Global status pill (üst bar) */
+.status-pill{
+  background: var(--panel-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+}
+
+/* Ortadaki durum mesajı (toast benzeri) */
+.center-status{
+  background: rgba(255,255,255,0.92) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Menü ikon renkleri */
+.menu__icon,
+.menu__subicon{
+  color: var(--ink) !important;
+}
+
+/* Genel metin rengi: styles.css içinde bazı elemanlar beyaz atanmış.
+   Light temada metinleri ebeveyn renginden inherit ediyoruz.
+   (Primary buton içindeki yazılar da beyaz kalır.) */
+p, span, small, label{
+  color: inherit !important;
+}
+
+.muted{ color: var(--muted) !important; }
+.muted{ color: var(--muted) !important; }
+
+/* Sol menü ikon renkleri */
+.menu__icon .mtn-svg,
+.menu__subicon .mtn-svg{
+  fill: currentColor;
+  color: var(--ink) !important;
+}
+
+/* Kurumsal grid */
+.table, .mtn-grid{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.table thead th, .mtn-grid thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--mtn-table-head);
+  color: var(--mtn-title);
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+.table tbody tr:nth-child(odd), .mtn-grid tbody tr:nth-child(odd){
+  background: var(--mtn-zebra-1);
+}
+.table tbody tr:nth-child(even), .mtn-grid tbody tr:nth-child(even){
+  background: var(--mtn-zebra-2);
+}
+.table tbody tr:hover, .mtn-grid tbody tr:hover{
+  background: rgba(74,163,255,0.08);
+}
+.table td, .table th{
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Kart taşması: içeride scroll */
+.table-card, .info-card, .action-card{
+  overflow: auto;
+}
+
+/* Sağ hızlı işlemler – canlı ama kurumsal */
+.action-card, .quick-pill{
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.action-card:hover, .quick-pill:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.30);
+}
+.action-card:active, .quick-pill:active{
+  transform: translateY(0);
+}
+.quick-pill{
+  border: 1px solid var(--border) !important;
+}
+
+/* Toast */
+.mtn-toast-host{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+  max-width: 380px;
+}
+.mtn-toast{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.30);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 180ms ease;
+}
+.mtn-toast.is-on{ opacity: 1; transform: translateY(0); }
+.mtn-toast.is-leaving{ opacity: 0; transform: translateY(8px); }
+.mtn-toast__close{
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+}
+.mtn-toast--success{ border-color: rgba(51,209,122,0.35); }
+.mtn-toast--warn{ border-color: rgba(255,176,32,0.35); }
+.mtn-toast--error{ border-color: rgba(255,77,77,0.35); }
+.mtn-toast--info{ border-color: rgba(47,107,255,0.30); }
+
+/* Sağdan açılan alt menü paneli */
+.mtn-submenu-scrim{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 9000;
+}
+.mtn-submenu-scrim.is-on{
+  opacity: 1;
+  pointer-events: auto;
+}
+.mtn-submenu-panel{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  /* İlk yüklemede (JS left hesaplamadan önce) panel sağdan gizli dursun */
+  right: 10px;
+  left: auto;
+  width: 300px;
+  max-width: calc(100vw - 20px);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.35);
+  /*
+    IMPORTANT:
+    Panel sol menünün SAĞINDAN açılır.
+    Kapalıyken sağ tarafa taşınarak (ekran dışına) gizlenmelidir.
+    Negatif translateX kullanılırsa panel, kapatıldığında sol menünün üstüne binip
+    "sol menü kayboluyor" hissi yaratır.
+  */
+  /* Kapalı durumda paneli kesin olarak ekranın SAĞINA gönder */
+  transform: translateX(110vw);
+  transition: transform 300ms ease-in-out;
+  z-index: 9001;
+}
+.mtn-submenu-panel.is-on{ transform: translateX(0); }
+.mtn-submenu-head{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.mtn-submenu-title{
+  font-weight: 800;
+  color: var(--mtn-title);
+}
+.mtn-submenu-back{
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.mtn-submenu-body{
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mtn-submenu-item{
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--ink);
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.mtn-submenu-item:hover{
+  background: rgba(74,163,255,0.10);
+  transform: translateY(-1px);
+}
+
+/* Asistan quick komut butonları */
+.assistant-live__quick{
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mtn-quickcmd{
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--ink);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.mtn-quickcmd:hover{
+  background: rgba(74,163,255,0.10);
+}
+
+/* Ayarlar (Tema) UI */
+.mtn-hidden{ display:none !important; }
+.mtn-theme-grid{
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 14px;
+  align-items: start;
+}
+.mtn-theme-presets{
+  display:flex;
+  gap:8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.mtn-theme-fields{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+.mtn-theme-fields label{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap:10px;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+.mtn-theme-actions{
+  margin-top: 10px;
+  display:flex;
+  gap:10px;
+}
+.mtn-sep{
+  border:0;
+  border-top:1px solid var(--border);
+  margin: 14px 0;
+}
+.mtn-settings-inline{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.mtn-toggle{ display:flex; gap:8px; align-items:center; }
+.mtn-inline{ display:flex; gap:8px; align-items:center; }
+.mtn-theme-preview{
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--panel);
+}
+.mtn-preview-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/* Responsive: ekrana sığdır */
+@media (max-width: 1100px){
+  .mtn-theme-grid{ grid-template-columns: 1fr; }
+}
+@media (max-width: 560px){
+  .mtn-theme-fields{ grid-template-columns: 1fr; }
+}
+
+/* =====================================================
+   SOL MENÜ (SUBMENU-ONLY MOD)
+   Sol menüde alt butonlar açılmasın; sağ panelden yönetilsin.
+   ===================================================== */
+body.mtn-submenu-only .menu__sub{
+  display: none !important;
+}
+body.mtn-submenu-only .menu__group{
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 14px;
+  overflow: hidden;
+}
+body.mtn-submenu-only .menu__group-header{
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: rgba(255,255,255,.03) !important;
+  border-radius: 14px;
+}
+body.mtn-submenu-only .menu__group-header:hover{
+  background: rgba(47,134,255,.10) !important;
+  border-color: rgba(47,134,255,.22) !important;
+}
+body.mtn-submenu-only .menu__group-header .menu__chev{
+  display: none !important;
+}
+
+/* Sidebar taşma/scroll stabil */
+.sidebar{
+  overflow-x: hidden !important;
+}
+
+/* Sağ panel açıkken sol menü scroll bozulmasın */
+body.mtn-submenu-open .sidebar{
+  overscroll-behavior: contain;
+}
+
+
+/* =====================================================
+   ERP LIGHT UPGRADE (Cari Kart Görünümü)
+   ===================================================== */
+
+.module__header--erp{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  padding-bottom: 6px;
+}
+.module__header--erp .module__header-left h2{
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+.module__header--erp .module__header-left p{
+  margin: 6px 0 0 0;
+  color: var(--muted);
+}
+.module__header-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.erp-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-soft);
+}
+.erp-search__icon{
+  font-size: 14px;
+  opacity: .7;
+}
+.erp-search__input{
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  min-width: 320px;
+  padding: 0 !important;
+}
+.erp-search__btn{
+  border-radius: 14px !important;
+  padding: 10px 14px !important;
+}
+.erp-new-btn{
+  border-radius: 16px !important;
+  padding: 12px 18px !important;
+  box-shadow: 0 14px 26px rgba(37,99,235,.22);
+}
+.erp-new-btn__icon{
+  font-weight: 900;
+  margin-right: 6px;
+  display:inline-block;
+}
+
+.customer-view-tools{
+  display:flex;
+  justify-content:flex-end;
+  margin: 8px 0 10px 0;
+}
+
+.customer-cards{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-top: 12px;
+}
+
+.customer-card{
+  position:relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  overflow:hidden;
+}
+.customer-card__stripe{
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:6px;
+  background: var(--primary);
+}
+.customer-card--musteri .customer-card__stripe{ background: #10b981; }
+.customer-card--tedarikci .customer-card__stripe{ background: #f97316; }
+.customer-card--usta .customer-card__stripe{ background: #3b82f6; }
+
+.customer-card__head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding: 16px 16px 12px 18px;
+}
+.customer-card__avatar{
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight: 900;
+  font-size: 18px;
+  background: rgba(37,99,235,.10);
+  color: var(--primary);
+  flex: 0 0 auto;
+}
+.customer-card--musteri .customer-card__avatar{ background: rgba(16,185,129,.12); color: #047857; }
+.customer-card--tedarikci .customer-card__avatar{ background: rgba(249,115,22,.12); color: #c2410c; }
+.customer-card--usta .customer-card__avatar{ background: rgba(59,130,246,.12); color: #1d4ed8; }
+
+.customer-card__main{ flex:1; min-width: 200px; }
+.customer-card__name{
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+}
+.customer-card__type{
+  color: var(--muted);
+  font-weight: 700;
+}
+.customer-card__meta{
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.customer-card__balance{
+  text-align:right;
+  min-width: 170px;
+}
+.customer-card__balance-label{
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .10em;
+}
+.customer-card__balance-value{
+  font-size: 26px;
+  font-weight: 950;
+  margin-top: 2px;
+}
+.customer-card__balance-value.is-positive{ color: #059669; }
+.customer-card__balance-value.is-negative{ color: #dc2626; }
+
+.customer-card__toggle{
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.customer-card__body{
+  padding: 0 16px 16px 18px;
+  display:none;
+}
+.customer-card.is-open .customer-card__body{
+  display:block;
+}
+
+.customer-card__actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.customer-card__btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 14px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  font-weight: 900;
+  cursor:pointer;
+  min-width: 210px;
+  flex: 1 1 220px;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.customer-card__btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.10);
+}
+.customer-card__btn .mtn-svg{
+  width: 18px;
+  height: 18px;
+}
+
+.customer-card__btn--collect{
+  background: rgba(16,185,129,.12);
+  border-color: rgba(16,185,129,.35);
+  color: #047857;
+}
+.customer-card__btn--pay{
+  background: rgba(239,68,68,.10);
+  border-color: rgba(239,68,68,.35);
+  color: #b91c1c;
+}
+.customer-card__btn--pdf{
+  background: var(--panel);
+}
+
+.table-card--customer-table{
+  margin-top: 8px;
+}
+
+/* Sol menü aktif çizgi + daha ERP görünüm */
+.menu__item,
+.menu__subitem{
+  position: relative;
+  border-radius: 14px !important;
+}
+
+.menu__item--active,
+.menu__subitem.is-active{
+  background: rgba(37,99,235,.10) !important;
+  border: 1px solid rgba(37,99,235,.16) !important;
+}
+
+.menu__item--active::before,
+.menu__subitem.is-active::before{
+  content:"";
+  position:absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+/* Mobil: header aksiyonları */
+@media (max-width: 900px){
+  .erp-search__input{ min-width: 220px; }
+  .customer-card__balance{ min-width: 130px; }
+  .customer-card__balance-value{ font-size: 22px; }
+}
+@media (max-width: 560px){
+  .erp-search{ width: 100%; }
+  .erp-search__input{ min-width: 140px; width: 100%; }
+  .erp-new-btn{ width: 100%; justify-content:center; }
+}
+
+
+
+/* === Sidebar ERP Aktif Vurgu (Lacivert + Gold) === */
+.menu__item,
+.menu__subitem{
+  border-radius: 12px !important;
+}
+
+.menu__item:hover,
+.menu__subitem:hover{
+  background: #F1F5F9 !important;
+}
+
+.menu__item--active,
+.menu__subitem.is-active{
+  background: #F1F5F9 !important;
+  color: #0B1E3B !important;
+  position: relative;
+}
+
+.menu__item--active::before,
+.menu__subitem.is-active::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 4px;
+  background: #D4AF37;
+  box-shadow: 0 0 0 1px rgba(212,175,55,0.35);
+}
+
+
+/* === Tablo: Zebra + Sticky Header + Hover === */
+.table, .mtn-grid{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+}
+
+.table thead th, .mtn-grid thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #F1F5F9 !important;
+  color: #0B1E3B !important;
+  border-bottom: 1px solid #E4EAF2 !important;
+}
+
+.table tbody tr:hover, .mtn-grid tbody tr:hover{
+  background: #F1F5F9 !important;
+}
+
+
+/* === Header / Topbar === */
+.topbar{
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #E4EAF2 !important;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06) !important;
+}
+
+.topbar__clock{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  color: #0B1E3B !important;
+}
+
+.topbar__clock:hover{
+  background: #F1F5F9 !important;
+}
+
+
+/* === Buton Stilleri (ERP) === */
+.btn, button{
+  font-weight: 600;
+}
+
+.btn.primary, .btn--primary, button.primary{
+  background: #0B1E3B !important;
+  color: #FFFFFF !important;
+  border: 1px solid #0B1E3B !important;
+}
+
+.btn.secondary, .btn--secondary, button.secondary{
+  background: #FFFFFF !important;
+  color: #0B1E3B !important;
+  border: 1px solid #0B1E3B !important;
+}
+
+.btn.gold, .btn--gold, button.gold{
+  background: #D4AF37 !important;
+  color: #0B1E3B !important;
+  border: 1px solid rgba(212,175,55,0.95) !important;
+  box-shadow: 0 10px 22px rgba(212,175,55,0.18) !important;
+}
+
+.btn.gold:hover, .btn--gold:hover, button.gold:hover{
+  filter: brightness(0.98);
+}
+
+
+/* === MTN v16: Kurumsal Light Son Dokunuşlar === */
+
+/* styles.css sonunda .ghost { background:#0c1e3b !important; } geliyor.
+   Light temada ghost (secondary) her yerde açık kalmalı. */
+.ghost{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  color: #0B1E3B !important;
+}
+.ghost:hover{
+  background: #F1F5F9 !important;
+  border-color: rgba(11,30,59,0.25) !important;
+}
+
+/* Gold CTA buton (premium) */
+.btn-gold,
+button.btn-gold,
+.gold{
+  background: #D4AF37 !important;
+  border: 1px solid rgba(212,175,55,0.65) !important;
+  color: #0B1E3B !important;
+  font-weight: 800 !important;
+}
+.btn-gold:hover,
+button.btn-gold:hover,
+.gold:hover{
+  filter: brightness(1.02);
+  box-shadow: 0 10px 22px rgba(212,175,55,0.22) !important;
+}
+
+/* Header üst bar: daha premium boşluk ve hizalama */
+.topbar{
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #E4EAF2 !important;
+}
+.topbar__actions{
+  gap: 10px !important;
+}
+
+/* Canlı saat pill: lacivert yazı + açık zemin */
+.topbar__clock{
+  background: #FFFFFF !important;
+  color: #0B1E3B !important;
+}
+
+/* Login ve Splash ekranlarını da Light yap (koyu tema istemiyoruz) */
+.login{
+  background: #F6F8FC !important;
+  color: #111827 !important;
+}
+.login__card{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  box-shadow: 0 18px 44px rgba(2,6,23,0.10) !important;
+}
+.login__demo,
+.login__strength,
+.login__label{
+  color: #475569 !important;
+}
+.login__input{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+}
+.login__toggle{
+  color: #0B1E3B !important;
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard / Ana Panel (v16) – Koyu kalan tüm kartları Light'a çek
+   -------------------------------------------------------------------------- */
+
+.dashboard__main,
+.executive-summary,
+.executive-card,
+.info-card,
+.action-card,
+.quick-pill,
+.table-card,
+.form-grid{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  box-shadow: 0 10px 24px rgba(2,6,23,0.08) !important;
+  color: #111827 !important;
+}
+
+.dashboard__banner{
+  background: linear-gradient(90deg, rgba(11,30,59,0.08), rgba(212,175,55,0.10)) !important;
+  border: 1px solid rgba(11,30,59,0.18) !important;
+  color: #0B1E3B !important;
+}
+
+.dashboard__subtitle,
+.executive-card span,
+.executive-card p,
+.dashboard__footer,
+.search-hint{
+  color: #475569 !important;
+}
+
+.executive-card strong{
+  color: #0B1E3B !important;
+}
+
+/* Chip / Toggle sistemleri */
+.chip,
+.toggle-button{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+}
+.chip:hover,
+.toggle-button:hover{
+  background: #F1F5F9 !important;
+  border-color: rgba(11,30,59,0.25) !important;
+}
+.chip--active,
+.toggle-button--active{
+  background: rgba(11,30,59,0.08) !important;
+  border-color: rgba(11,30,59,0.55) !important;
+  color: #0B1E3B !important;
+}
+.chip__count{
+  background: #0B1E3B !important;
+  border: 1px solid rgba(11,30,59,0.25) !important;
+  color: #FFFFFF !important;
+}
+
+/* Action Card (hızlı işlem kutuları) */
+.action-card{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  color: #0B1E3B !important;
+}
+.action-card:hover{
+  border-color: rgba(212,175,55,0.75) !important;
+  box-shadow: 0 14px 28px rgba(2,6,23,0.10) !important;
+  transform: translateY(-1px);
+}
+
+/* Quick Pills */
+.quick-pill{
+  color: #0B1E3B !important;
+}
+.quick-pill:hover{
+  background: rgba(212,175,55,0.10) !important;
+  border-color: rgba(212,175,55,0.70) !important;
+}
+
+/* AI form / Dashboard inputs koyu kalmasın */
+.ai-form input,
+.ai-form select{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+  color: #111827 !important;
+}
+
+/* Tablo header koyu/okunur */
+.table-card th,
+.table-card td{
+  border-bottom: 1px solid #E4EAF2 !important;
+  color: #111827 !important;
+}
+
+.splash{
+  background: #F6F8FC !important;
+}
+.splash__logo{
+  background: #FFFFFF !important;
+  border: 1px solid #E4EAF2 !important;
+}
+.splash h1{
+  color: #0B1E3B !important;
+}
+.splash p,
+.splash__meta{
+  color: #475569 !important;
+}
+
+/* Tablo hücre çizgileri: net okunur */
+.table td, .table th{
+  border-bottom: 1px solid #E4EAF2 !important;
+}
+
+/* KPI kartları ve aksiyon kartları: premium hover */
+.action-card{
+  box-shadow: 0 10px 22px rgba(2,6,23,0.06) !important;
+}
+.action-card:hover{
+  box-shadow: 0 18px 40px rgba(2,6,23,0.10) !important;
+}
+
+/* Sol menü ikonlar: lacivert baskın */
+.sidebar .menu__icon,
+.sidebar .menu__subicon{
+  color: #0B1E3B !important;
+}
+
+
+/* =========================================================
+   MTN ERP Light Mode – Legacy Dark Surface Override (V19)
+   Amaç: Dark temadan kalan panellerin Light temada okunmama
+   sorununu KÖKTEN çözmek (ana panel + modül kartları).
+   ========================================================= */
+
+body{
+  background: var(--bg) !important;
+  color: var(--ink) !important;
+}
+
+a, label, th, td, button, input, select, textarea{
+  color: inherit !important;
+}
+
+input::placeholder, textarea::placeholder{
+  color: #64748B !important;
+  opacity: 1 !important;
+}
+
+/* Dashboard / Kart / Panel yüzeyleri (eski koyu yüzeyleri beyaza çek) */
+.tabs,
+.form-grid,
+.table-card,
+.info-card,
+.action-card,
+.ai-reminder-item,
+.detail-summary,
+.offer,
+.offer-home__intro,
+.offer-home__tile,
+.assistant-live{
+  background: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.action-card:hover,
+.offer-home__tile:hover{
+  background: var(--panel) !important;
+  border-color: rgba(11, 30, 59, 0.35) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Tablo çizgileri */
+.table-card th,
+.table-card td{
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Hızlı menü pill'leri */
+.quick-pill{
+  background: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+}
+
+/* Başlıklar */
+.table-card h3,
+.info-card h3,
+.detail-summary h3,
+.offer-home__intro h3{
+  color: var(--primary) !important;
+}
+
+/* Buton okunurluğu (Primary/Secondary) */
+.primary,
+button.primary,
+.btn.primary{
+  background: var(--primary) !important;
+  border: 1px solid rgba(11, 30, 59, 0.15) !important;
+  color: #FFFFFF !important;
+}
+
+.primary:hover,
+button.primary:hover,
+.btn.primary:hover{
+  filter: brightness(0.96) !important;
+}
+
+/* Ghost butonlar (ör: saat / ses) */
+.ghost,
+button.ghost,
+.btn.ghost{
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+}
+
+.ghost:hover,
+button.ghost:hover,
+.btn.ghost:hover{
+  background: var(--hover) !important;
+}
+
+/* Sol menü aktif satır Premium (Gold çizgi) */
+.nav__item.is-active::before,
+.menu__item--active::before{
+  background: var(--gold) !important;
+}
+
+/* Tablo başlık rengi */
+th{
+  color: var(--primary) !important;
+}
+
+
+
+
+/* === V21.1 Cari Ekstre Sekmeleri (Light ERP) === */
+.filter-bar .grow{
+  flex: 1 1 280px;
+  min-width: 260px;
+}
+
+.mtn-tabs{
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tab-button{
+  background: #FFFFFF !important;
+  border: 1px solid var(--border) !important;
+  color: var(--blue) !important;
+}
+
+.tab-button:hover{
+  background: var(--hover) !important;
+  border-color: rgba(11, 30, 59, 0.35) !important;
+}
+
+.tab-button--active{
+  background: rgba(11, 30, 59, 0.10) !important;
+  border-color: rgba(212, 175, 55, 0.85) !important;
+  color: var(--blue) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.tab-count{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 6px;
+  margin-left: 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--hover);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.tab-button--active .tab-count{
+  background: rgba(212, 175, 55, 0.20);
+  border-color: rgba(212, 175, 55, 0.70);
+  color: var(--blue);
+}
+
+/* Tablo başlıklarını Light tema için daha net yap */
+.table-card thead th{
+  background: var(--hover) !important;
+  color: var(--blue) !important;
+  font-weight: 800 !important;
+}
