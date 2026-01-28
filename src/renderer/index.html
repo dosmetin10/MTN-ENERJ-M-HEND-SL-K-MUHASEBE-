@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MTN Masaüstü</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./mtn/mtn_theme.css">
+  <link rel="stylesheet" href="./assets/styles/mtn-theme.css">
+</head>
+  <body class="mtn-submenu-only">
+    <svg class="mtn-icon-sprite" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <symbol id="mtn-i-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+    <rect x="3" y="3" width="8" height="8" rx="2"></rect>
+    <rect x="13" y="3" width="8" height="5" rx="2"></rect>
+    <rect x="13" y="10" width="8" height="11" rx="2"></rect>
+    <rect x="3" y="13" width="8" height="8" rx="2"></rect>
+  </symbol>
+  <symbol id="mtn-i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M23 21v-1a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+  </symbol>
+  <symbol id="mtn-i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73z"></path>
+    <path d="M3.27 6.96L12 12l8.73-5.04"></path>
+    <path d="M12 22V12"></path>
+  </symbol>
+  <symbol id="mtn-i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <path d="M14 2v6h6"></path>
+    <path d="M16 13H8"></path>
+    <path d="M16 17H8"></path>
+  </symbol>
+  <symbol id="mtn-i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 7h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"></path>
+    <path d="M18 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"></path>
+    <circle cx="16" cy="12" r="1"></circle>
+  </symbol>
+  <symbol id="mtn-i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="M4.93 4.93l1.41 1.41"></path>
+    <path d="M17.66 17.66l1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="M4.93 19.07l1.41-1.41"></path>
+    <path d="M17.66 6.34l1.41-1.41"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </symbol>
+  <symbol id="mtn-i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 6h13"></path>
+    <path d="M8 12h13"></path>
+    <path d="M8 18h13"></path>
+    <path d="M3 6h.01"></path>
+    <path d="M3 12h.01"></path>
+    <path d="M3 18h.01"></path>
+  </symbol>
+  <symbol id="mtn-i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M12 5v14"></path>
+    <path d="M5 12h14"></path>
+  </symbol>
+  <symbol id="mtn-i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 3h5v5"></path>
+    <path d="M21 3l-7 7"></path>
+    <path d="M8 21H3v-5"></path>
+    <path d="M3 21l7-7"></path>
+  </symbol>
+  <symbol id="mtn-i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 16v-4"></path>
+    <path d="M12 8h.01"></path>
+  </symbol>
+  <symbol id="mtn-i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 2h12v20l-2-1-2 1-2-1-2 1-2-1-2 1V2z"></path>
+    <path d="M9 7h6"></path>
+    <path d="M9 11h6"></path>
+    <path d="M9 15h5"></path>
+  </symbol>
+  <symbol id="mtn-i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+    <path d="M16 2v4"></path>
+    <path d="M8 2v4"></path>
+    <path d="M3 10h18"></path>
+    <path d="M8 14h.01"></path>
+    <path d="M12 14h.01"></path>
+    <path d="M16 14h.01"></path>
+  </symbol>
+  <symbol id="mtn-i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <path d="M17 8l-5-5-5 5"></path>
+    <path d="M12 3v12"></path>
+  </symbol>
+  <symbol id="mtn-i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M4 6h16"></path>
+    <path d="M4 12h16"></path>
+    <path d="M4 18h16"></path>
+  </symbol>
+  <symbol id="mtn-i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 11l9-8 9 8"></path>
+    <path d="M9 22V12h6v10"></path>
+  </symbol>
+  <symbol id="mtn-i-factory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 21V10l6 3V10l6 3V10l6 3v8H3z"></path>
+    <path d="M3 21h18"></path>
+  </symbol>
+  <symbol id="mtn-i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 7a2 2 0 0 1 2-2h5l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path>
+  </symbol>
+  <symbol id="mtn-i-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 5v14"></path>
+    <path d="M19 12l-7 7-7-7"></path>
+  </symbol>
+  <symbol id="mtn-i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5"></path>
+    <path d="M5 12l7-7 7 7"></path>
+  </symbol>
+  <symbol id="mtn-i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 3v18h18"></path>
+    <path d="M7 15v-4"></path>
+    <path d="M12 15V9"></path>
+    <path d="M17 15V6"></path>
+  </symbol>
+  <symbol id="mtn-i-invoice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 2h12v20l-2-1-2 1-2-1-2 1-2-1-2 1V2z"></path>
+    <path d="M8 6h8"></path>
+    <path d="M8 10h8"></path>
+    <path d="M8 14h5"></path>
+  </symbol>
+  <symbol id="mtn-i-tools" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.7 6.3a5 5 0 0 0-6.4 6.4l-5 5a2 2 0 0 0 2.8 2.8l5-5a5 5 0 0 0 6.4-6.4l-3 3-2.8-2.8 3-3z"></path>
+  </symbol>
+</svg>
+
+    <div class="splash" id="splash-screen">
+      <div class="splash__content">
+        <div class="splash__ring"></div>
+        <img class="splash__logo" id="splash-logo" src="assets/logo.svg" alt="MTN logo" />
+        <h1>MTN Ön Muhasebe</h1>
+        <p>Profesyonel ERP deneyimi hazırlanıyor...</p>
+        <div class="splash__loader"><span></span></div>
+        <div class="splash__meta">MTN Enerji Mühendislik • Kurumsal Sürüm</div>
+      </div>
+    </div>
+    <div class="first-run first-run--hidden" id="first-run-screen">
+      <div class="first-run__card">
+        <div>
+          <h1>İlk Kurulum</h1>
+          <p>Programı kullanmadan önce firma ve kullanıcı bilgilerini girin.</p>
+        </div>
+        <form id="first-run-form">
+          <div class="form-grid">
+            <label>
+              Firma Adı
+              <input name="companyName" required placeholder="MTN Enerji" />
+            </label>
+            <label>
+              Yetkili
+              <input name="companyOwner" placeholder="Metin Döş" />
+            </label>
+            <label>
+              Vergi Dairesi
+              <input name="taxOffice" placeholder="Şahinbey" />
+            </label>
+            <label>
+              Vergi No
+              <input name="taxNumber" placeholder="14168163156" />
+            </label>
+            <label>
+              Telefon
+              <input name="companyPhone" placeholder="0535 641 90 61" />
+            </label>
+            <label>
+              IBAN
+              <input name="companyIban" placeholder="TR13 0011 1000 0000 0136 9157 74" />
+            </label>
+            <label class="full-width">
+              Adres
+              <input name="companyAddress" placeholder="Ertuğrulgazi Mah. Suyolu Cad. No:77 Şahinbey / Gaziantep" />
+            </label>
+            <label>
+              Banka
+              <input name="companyBank" placeholder="FİNANSBANK" />
+            </label>
+            <label>
+              Logo Yükle
+              <input name="logoFile" id="logo-file" type="file" accept="image/*" />
+            </label>
+            <label>
+              Varsayılan Kasa
+              <input name="defaultCashName" required placeholder="Ana Kasa" />
+            </label>
+          </div>
+          <div class="first-run__preview">
+            <img id="logo-preview" alt="Firma logosu" />
+            <div>
+              <h3>Yönetici Kullanıcı</h3>
+              <div class="first-run__user">
+                <label>
+                  Kullanıcı Adı
+                  <input name="adminUsername" required placeholder="admin" />
+                </label>
+                <label>
+                  Şifre
+                  <input name="adminPassword" type="password" required />
+                </label>
+                <label>
+                  Rol
+                  <input name="adminRole" value="admin" readonly />
+                </label>
+              </div>
+              <p class="muted">
+                Lisans ve yetkilendirme altyapısı bu kayıt üzerinden ilerler.
+              </p>
+            </div>
+          </div>
+          <button class="primary" type="submit">Kurulumu Tamamla</button>
+        </form>
+      </div>
+    </div>
+    <div class="login" id="login-screen">
+      <div class="login__card">
+        <div class="login__header">
+          <div class="login__brand">
+            <img class="login__logo" id="login-logo" src="assets/logo.svg" alt="Firma logosu" />
+            <div>
+              <h1>Giriş</h1>
+              <span class="login__demo">Demo: mtn / 1453</span>
+            </div>
+          </div>
+        </div>
+        <form id="login-form">
+          <label class="login__field">
+            <span class="login__label">Kullanıcı Adı</span>
+            <div class="login__input">
+              <span class="login__icon">👤</span>
+              <input name="username" required placeholder="mtn" />
+            </div>
+          </label>
+          <label class="login__field">
+            <span class="login__label">Şifre</span>
+            <div class="login__input">
+              <span class="login__icon">🔒</span>
+              <input
+                name="password"
+                type="password"
+                required
+                placeholder="****"
+                id="login-password"
+              />
+              <button class="login__toggle" type="button" id="login-toggle">
+                👁️
+              </button>
+            </div>
+          </label>
+          <div class="login__footer">
+            <span class="login__strength">Güç:</span>
+            <button class="primary" type="submit">Giriş Yap</button>
+          </div>
+          <span class="login__error" id="login-error"></span>
+        </form>
+      </div>
+    </div>
+    <div class="app app--hidden" id="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <img class="brand__logo" id="brand-logo" alt="Firma logosu" />
+          <span class="brand__title" id="brand-title">MTN ENERJİ ÖN MUHASEBE</span>
+          <span class="brand__subtitle">Kurumsal Stok & Finans Yönetimi</span>
+        </div>
+        <nav class="menu" id="mtn-menu">
+  <button class="menu__item menu__item--active" data-panel="dashboard-panel" data-title="Ana Menü">
+    <span class="menu__icon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-dashboard"></use></svg></span>
+    <span class="menu__label">Ana Menü</span>
+  </button>
+
+  <div class="menu__group" data-group="cari">
+    <button class="menu__group-header" type="button">
+      <span class="menu__icon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-users"></use></svg></span>
+      <span class="menu__label">Cari</span>
+      <span class="menu__chev">▾</span>
+    </button>
+    <div class="menu__sub">
+      <button class="menu__subitem" data-panel="customers-panel" data-subpanel="cari-listesi" data-title="Cari Listesi">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-list"></use></svg></span>
+        <span class="menu__sublabel">Cari Listesi</span>
+      </button>
+      <button class="menu__subitem" data-panel="customers-panel" data-subpanel="cari-ekleme" data-title="Cari Ekle">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-plus"></use></svg></span>
+        <span class="menu__sublabel">Cari Ekle</span>
+      </button>
+      <button class="menu__subitem" data-panel="customers-panel" data-subpanel="cari-islem" data-title="Cari İşlem">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-swap"></use></svg></span>
+        <span class="menu__sublabel">Cari İşlem</span>
+      </button>
+      <button class="menu__subitem" data-panel="customers-panel" data-subpanel="cari-detay" data-title="Cari Detay">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-info"></use></svg></span>
+        <span class="menu__sublabel">Cari Detay</span>
+      </button>
+      <button class="menu__subitem" data-panel="customers-panel" data-subpanel="cari-ekstre" data-title="Cari Ekstre">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-receipt"></use></svg></span>
+        <span class="menu__sublabel">Cari Ekstre</span>
+      </button>
+      <button class="menu__subitem" data-panel="customers-panel" data-subpanel="usta-puantaj" data-title="Usta Puantaj">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-calendar"></use></svg></span>
+        <span class="menu__sublabel">Usta / Personel Puantaj</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu__group" data-group="stok">
+    <button class="menu__group-header" type="button">
+      <span class="menu__icon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-box"></use></svg></span>
+      <span class="menu__label">Stok</span>
+      <span class="menu__chev">▾</span>
+    </button>
+    <div class="menu__sub">
+      <button class="menu__subitem" data-panel="stocks-panel" data-subpanel="stok-listesi" data-title="Stok Listesi">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-list"></use></svg></span>
+        <span class="menu__sublabel">Stok Listesi</span>
+      </button>
+      <button class="menu__subitem" data-panel="stocks-panel" data-subpanel="stok" data-title="Stok Ekle">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-plus"></use></svg></span>
+        <span class="menu__sublabel">Stok Ekle</span>
+      </button>
+      <button class="menu__subitem" data-panel="stocks-panel" data-subpanel="toplu-aktarim" data-title="Toplu Stok Girişi">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-upload"></use></svg></span>
+        <span class="menu__sublabel">Toplu Stok Girişi</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu__group" data-group="teklif">
+    <button class="menu__group-header" type="button">
+      <span class="menu__icon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-file"></use></svg></span>
+      <span class="menu__label">Teklif</span>
+      <span class="menu__chev">▾</span>
+    </button>
+    <div class="menu__sub">
+      <button class="menu__subitem" data-panel="sales-panel" data-subpanel="menu" data-title="Teklif Menüsü">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-menu"></use></svg></span>
+        <span class="menu__sublabel">Teklif Menüsü</span>
+      </button>
+      <button class="menu__subitem" data-panel="sales-panel" data-subpanel="internal" data-title="İç Tesisat">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-home"></use></svg></span>
+        <span class="menu__sublabel">İç Tesisat</span>
+      </button>
+      <button class="menu__subitem" data-panel="sales-panel" data-subpanel="industrial" data-title="Endüstriyel">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-factory"></use></svg></span>
+        <span class="menu__sublabel">Endüstriyel</span>
+      </button>
+      <button class="menu__subitem" data-panel="sales-panel" data-subpanel="saved" data-title="Tekliflerim">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-folder"></use></svg></span>
+        <span class="menu__sublabel">Tekliflerim</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu__group" data-group="kasa">
+    <button class="menu__group-header" type="button">
+      <span class="menu__icon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-wallet"></use></svg></span>
+      <span class="menu__label">Kasa & Banka</span>
+      <span class="menu__chev">▾</span>
+    </button>
+    <div class="menu__sub">
+      <button class="menu__subitem" data-panel="cash-panel" data-title="Kasa & Banka">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-wallet"></use></svg></span>
+        <span class="menu__sublabel">Kasa & Banka</span>
+      </button>
+      <button class="menu__subitem" data-panel="cash-panel" data-subpanel="gelir" data-title="Tahsilat Yap">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-arrow-down"></use></svg></span>
+        <span class="menu__sublabel">Tahsilat Yap</span>
+      </button>
+      <button class="menu__subitem" data-panel="cash-panel" data-subpanel="gider" data-title="Ödeme Yap">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-arrow-up"></use></svg></span>
+        <span class="menu__sublabel">Ödeme Yap</span>
+      </button>
+      <button class="menu__subitem" data-panel="cash-panel" data-subpanel="rapor" data-title="Kasa Raporu">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-chart"></use></svg></span>
+        <span class="menu__sublabel">Kasa Raporu</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu__group" data-group="diger">
+    <button class="menu__group-header" type="button">
+      <span class="menu__icon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-settings"></use></svg></span>
+      <span class="menu__label">Diğer</span>
+      <span class="menu__chev">▾</span>
+    </button>
+    <div class="menu__sub">
+      <button class="menu__subitem" data-panel="invoices-panel" data-title="Fatura">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-invoice"></use></svg></span>
+        <span class="menu__sublabel">Fatura</span>
+      </button>
+      <button class="menu__subitem" data-panel="engineering-panel" data-title="Mühendislik">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-tools"></use></svg></span>
+        <span class="menu__sublabel">Mühendislik</span>
+      </button>
+      <button class="menu__subitem" data-panel="settings-panel" data-title="Ayarlar">
+        <span class="menu__subicon" aria-hidden="true"><svg class="mtn-svg"><use href="#mtn-i-settings"></use></svg></span>
+        <span class="menu__sublabel">Ayarlar</span>
+      </button>
+    </div>
+  </div>
+</nav>
+        <div class="sidebar__actions">
+          <button class="menu__action" data-panel="settings-panel" data-role="admin">Ayarlar</button>
+          <button class="menu__action" id="backup-now-secondary" data-role="admin">Yedek Al</button>
+          <button class="menu__action menu__action--danger" id="logout-button">Çıkış</button>
+        </div>
+        <div class="sidebar__footer">
+          <p>Offline mod: <strong class="status status--online">Hazır</strong></p>
+          <p>Versiyon: <span id="app-version">0.2.2</span></p>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div class="topbar__brand">
+            <img class="topbar__logo" id="topbar-logo" alt="Firma logosu" />
+            <div>
+              <h1 id="panel-title">Ana</h1>
+              <p>
+                Hoş geldiniz, <span id="user-name">Metin</span> • Rol:
+                <span id="user-role">Muhasebe</span>
+              </p>
+            </div>
+          </div>
+          <div class="topbar__actions">
+            <div class="status-pill" id="global-status" aria-live="polite"></div>
+            <button class="ghost topbar__sound" id="toggle-sound" type="button">Ses: Açık</button>
+            <div class="ghost topbar__clock" id="topbar-clock" aria-label="Saat"></div>
+            <button class="topbar__exit" id="exit-app" aria-label="Çıkış">
+              ✕
+            </button>
+          </div>
+        </header>
+        <div class="center-status" id="center-status" aria-live="polite"></div>
+        <div class="content__scroll">
+          <section class="panel panel--active" id="dashboard-panel">
+            <div class="dashboard">
+              <section class="dashboard__main">
+                <div class="dashboard__banner">
+                  Ön Muhasebe & Stok Yönetimi Paneli
+                </div>
+                <p class="dashboard__subtitle">
+                  Güncel finans, stok ve operasyon verilerini tek ekranda yönetin.
+                </p>
+                <!-- Canlı muhasebe asistanı paneli -->
+                <section class="assistant-live">
+                  <div class="assistant-live__header">
+                    <h3>Muhasebe Asistanı (Canlı)</h3>
+                  </div>
+                  <div class="assistant-live__log" id="assistant-log" aria-live="polite"></div>
+                  <div class="assistant-live__input">
+                    <input id="assistant-command-input" placeholder="Komut girin…" />
+                  </div>
+                  <!-- Suggestions/hints will appear here while typing -->
+                  <div class="assistant-live__hint" id="assistant-live-hint"></div>
+                </section>
+                <div class="dashboard__search">
+                  <input
+                    class="search search--wide"
+                    placeholder="Hızlı arama: cari, malzeme, fatura, fiş..."
+                  />
+                  <button class="ghost">ARA</button>
+                </div>
+                <div class="chip-group">
+                  <button class="chip chip--active">Hepsi</button>
+                  <button class="chip">Cariler</button>
+                  <button class="chip">Malzeme</button>
+                  <button class="chip">Fatura</button>
+                  <button class="chip">Fiş</button>
+                </div>
+                <div class="dashboard__grid">
+                  <button class="action-card" data-panel="customers-panel">Cari Kartlar</button>
+                  <button class="action-card" data-panel="customers-panel">Cari Güncelle</button>
+                  <button class="action-card" data-panel="cash-panel">Tahsilat</button>
+                  <button class="action-card" data-panel="invoices-panel">Fatura</button>
+                  <button class="action-card" data-panel="stocks-panel">Stok Fişi</button>
+                  <button class="action-card" data-panel="stocks-panel" data-subpanel="stok-listesi">Depo / Stok</button>
+                  <button class="action-card" data-panel="reports-panel">Borçlu Listesi</button>
+                  <button class="action-card" data-panel="cash-panel">Ödeme</button>
+                  <button class="action-card" data-panel="reports-panel">Rapor / Durum Analizi</button>
+                </div>
+                <div class="dashboard__footer">
+                  <span>Hızlı araçlar</span>
+                  <div class="dashboard__quick">
+                    <button class="quick-pill" data-panel="cash-panel">KASA</button>
+                    <button class="quick-pill" data-panel="reports-panel">TOPLAM KDV</button>
+                    <button class="quick-pill" data-panel="sales-panel">TEKLİF VER</button>
+                    <button class="quick-pill" data-panel="stocks-panel">MALZEME GİRİŞİ</button>
+                    <button class="quick-pill" data-panel="engineering-panel">MÜHENDİSLİK</button>
+                  </div>
+                </div>
+              </section>
+              <aside class="dashboard__aside">
+                <article class="info-card">
+                  <h3>HATIRLATICI OTOMATİK — YZ Destekli</h3>
+                  <p>Fatura/fiş, ödeme ve bakım tarihlerini takip eder, uyarı üretir.</p>
+                </article>
+                <article class="info-card">
+                  <h3>METİN ŞAHSİ ÖDEME HATIRLATMA</h3>
+                  <p>Elektrik, su vb. kişisel ödemeler için uyarı alanı.</p>
+                </article>
+                <article class="info-card ai-card">
+                  <h3>YZ Muhasebe Asistanı</h3>
+                  <p class="muted">
+                    Elektrik, su, doğalgaz ve malzemeci ödemelerini takip edin. YZ asistanı
+                    ödeme günlerini kaçırmamanız için sizi uyarır.
+                  </p>
+                  <form class="ai-form" id="ai-reminder-form">
+                    <label>
+                      Hatırlatma Başlığı
+                      <input name="title" required placeholder="Elektrik faturası" />
+                    </label>
+                    <label>
+                      Ödeme Tarihi
+                      <input name="dueDate" type="date" required />
+                    </label>
+                    <label>
+                      Kategori
+                      <select name="category">
+                        <option value="Şahsi Ödeme">Şahsi Ödeme</option>
+                        <option value="Elektrik">Elektrik</option>
+                        <option value="Su">Su</option>
+                        <option value="Doğalgaz">Doğalgaz</option>
+                        <option value="Malzemeci">Malzemeci</option>
+                      </select>
+                    </label>
+                    <button class="primary" type="submit">Hatırlatıcı Ekle</button>
+                  </form>
+                  <ul class="ai-reminder-list" id="ai-reminder-list"></ul>
+                </article>
+              </aside>
+            </div>
+          </section>
+
+          <section class="panel" id="customers-panel">
+            <section class="module" id="customers-module">
+              <div class="module__header">
+                <h2>Cari Yönetimi</h2>
+                <p>Müşteri ekleyin ve cari listenizi yönetin.</p>
+              </div>
+        <div class="kpi-bar" id="kpi-customers">
+          <div class="kpi">
+            <div class="kpi__label">Toplam</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Bugün</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Durum</div>
+            <div class="kpi__value">-</div>
+          </div>
+        </div>
+
+              <div id="customer-list-section">
+                <div class="table-actions">
+                  <input id="customer-search" class="search" placeholder="Cari ara (ad/ünvan/vergi/telefon)..." />
+                  <button class="ghost" id="customer-search-btn">Ara</button>
+                </div>
+                <div class="chip-group chip-group--filters" id="customer-filters">
+                  <button class="chip chip--active" data-customer-filter="all">
+                    Hepsi <span class="chip__count" id="customer-filter-all-count">0</span>
+                  </button>
+                  <button class="chip" data-customer-filter="debtors">
+                    Borçlular <span class="chip__count" id="customer-filter-debtors-count">0</span>
+                  </button>
+                  <button class="chip" data-customer-filter="creditors">
+                    Alacaklılar <span class="chip__count" id="customer-filter-creditors-count">0</span>
+                  </button>
+                  <button class="chip" data-customer-filter="due">
+                    Vadesi Yaklaşan <span class="chip__count" id="customer-filter-due-count">0</span>
+                  </button>
+                </div>
+                <p class="search-hint" id="customer-search-suggestion"></p>
+                <!-- Inline customer action panel (added) -->
+                <div id="customer-inline-panel" class="inline-panel is-hidden">
+                  <div class="inline-panel__header">
+                    <h3 id="inline-customer-title"></h3>
+                    <button class="ghost" type="button" id="inline-customer-close">✕</button>
+                  </div>
+                  <div class="inline-panel__actions">
+                    <button class="primary" type="button" id="inline-customer-tahsilat">Tahsilat Yap</button>
+                    <button class="primary" type="button" id="inline-customer-payment">Ödeme Yap</button>
+                    <button class="primary" type="button" id="inline-customer-offer">Teklif Oluştur</button>
+                    <button class="primary" type="button" id="inline-customer-invoice">Fiş / Fatura Ekle</button>
+                    <button class="primary" type="button" id="inline-customer-job">İş Ekle</button>
+                    <button class="primary" type="button" id="inline-customer-material">Depodan Malzeme Ekle</button>
+                  </div>
+                  <div id="inline-form-container"></div>
+                </div>
+                <div class="table-card">
+                  <h3>Mevcut Cariler</h3>
+                  <table class="table" id="customer-table">
+                    <thead>
+                      <tr>
+                        <th>Kod</th>
+                        <th>Ünvan</th>
+                        <th>Tip</th>
+                        <th>Telefon</th>
+                        <th>Vergi No</th>
+                        <th>E-posta</th>
+                        <th>Bakiye</th>
+                        <th>Durum</th>
+                        <th>Detay</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customers-table"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div id="customer-form-section">
+                <form class="form-grid" id="customer-form">
+                <label>
+                  Cari Kodu
+                  <input name="code" placeholder="Otomatik" readonly />
+                </label>
+                <label>
+                  Cari Tipi
+                  <select name="type">
+                    <option value="musteri">Müşteri</option>
+                    <option value="tedarikci">Tedarikçi</option>
+                    <option value="usta">Usta/Personel</option>
+                  </select>
+                </label>
+                <label>
+                  Ünvan / Ad Soyad
+                  <input name="name" required placeholder="Müşteri adı" />
+                </label>
+                <label>
+                  TC / VKN
+                  <input name="identityNumber" placeholder="TC / VKN" />
+                </label>
+                <label id="opening-debt-field">
+                  Açılış Borç
+                  <input name="openingDebt" type="number" min="0" step="0.01" placeholder="0" />
+                </label>
+                <label id="opening-credit-field">
+                  Açılış Alacak
+                  <input name="openingCredit" type="number" min="0" step="0.01" placeholder="0" />
+                </label>
+                <label>
+                  Telefon
+                  <input name="phone" placeholder="05xx xxx xx xx" />
+                </label>
+                <label>
+                  Vergi No
+                  <input name="taxNumber" placeholder="Vergi numarası" />
+                </label>
+                <label>
+                  E-posta
+                  <input name="email" type="email" placeholder="mail@firma.com" />
+                </label>
+                <label>
+                  Risk Limiti
+                  <input name="riskLimit" type="number" min="0" step="0.01" placeholder="0" />
+                </label>
+                <label>
+                  Vade (Gün)
+                  <input name="dueDays" type="number" min="0" step="1" placeholder="0" />
+                </label>
+                <label class="full-width">
+                  Adres
+                  <input name="address" placeholder="Firma adresi" />
+                </label>
+                <label class="full-width">
+                  Not
+                  <input name="note" placeholder="Cari notu" />
+                </label>
+                <button class="primary" type="submit">Cari Kaydet</button>
+                </form>
+              </div>
+              <div id="customer-transaction-section" class="is-hidden">
+                <form class="form-grid" id="customer-transaction-form">
+                <label>
+                  Tarih
+                  <input name="createdAt" type="date" id="customer-transaction-date" />
+                </label>
+                <label>
+                  Cari Seç
+                  <select id="transaction-customer"></select>
+                </label>
+                <label>
+                  İşlem Türü
+                  <select name="type" id="transaction-type">
+                    <option value="tahsilat">Tahsilat</option>
+                    <option value="odeme">Ödeme</option>
+                  </select>
+                </label>
+                <p class="muted full-width" id="transaction-hint">
+                  Müşteri için tahsilat, tedarikçi için ödeme kaydı girin.
+                </p>
+                <label>
+                  Ödeme Türü
+                  <select name="paymentMethod" id="transaction-method">
+                    <option value="nakit">Nakit</option>
+                    <option value="eft">EFT</option>
+                    <option value="havale">Havale</option>
+                    <option value="cek">Çek</option>
+                    <option value="kart">Kart</option>
+                    <option value="senet">Senet</option>
+                  </select>
+                </label>
+                <label>
+                  Tutar
+                  <input name="amount" type="number" min="0" step="0.01" />
+                </label>
+                <label class="full-width">
+                  Açıklama
+                  <input name="note" placeholder="İşlem açıklaması" />
+                </label>
+                <button class="primary" type="submit">İşlem Kaydet</button>
+                </form>
+              </div>
+              <div id="customer-detail-section" class="is-hidden">
+                <div class="table-card is-hidden" id="customer-detail-card">
+                  <div class="table-actions">
+                    <h3 id="customer-detail-title">Cari Detay</h3>
+                    <!-- Only a close button is shown on the right as per specification -->
+                    <button class="ghost" id="customer-detail-close">✕</button>
+                    <!-- Tedarikçiye ödeme butonu kaldırıldı -->
+                  </div>
+                  <div class="report-actions">
+                    <button class="primary" id="customer-detail-offer">📄 Teklif Oluştur</button>
+                    <button class="primary" id="customer-detail-collect">💰 Tahsilat Yap</button>
+                    <button class="primary" id="customer-detail-invoice">📄 Fiş / Fatura Ekle</button>
+                    <button class="ghost" id="customer-detail-edit">✏️ Cari Düzenle</button>
+                    <button class="ghost" id="customer-detail-passive">🚫 Cari Pasif Yap</button>
+                  </div>
+                  <div class="detail-footer-actions">
+                    <button class="primary" id="customer-detail-save">Kaydet ve Listeye Dön</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            
+            <section
+              class="module is-hidden subpanel--hidden"
+              id="worker-timesheet-module"
+            >
+              <div class="module__header">
+                <h2>USTA / Personel Puantaj</h2>
+                <p>Haftalık puantaj, iş kalemi ve ödeme yönetimi.</p>
+              </div>
+
+              <div class="table-card">
+                <div class="filter-bar">
+                  <label>
+                    Usta / Personel
+                    <select id="timesheet-worker"></select>
+                  </label>
+
+                  <div class="timesheet-multi-worker">
+                    <div class="timesheet-multi-actions">
+                      <button class="ghost" id="timesheet-worker-add" type="button">Listeye Ekle</button>
+                      <button class="ghost" id="timesheet-worker-clear" type="button">Temizle</button>
+                    </div>
+                    <div id="timesheet-workers-list" class="chip-list"></div>
+                    <div class="muted small">
+                      Not: Birden fazla usta seçerseniz "Puantaj Kaydet" aynı satırları seçili ustaların hepsine ekler.
+                    </div>
+                  </div>
+
+                  <label>
+                    Hafta Başlangıç
+                    <input type="date" id="timesheet-week-start" />
+                  </label>
+                  <label>
+                    Hafta Bitiş
+                    <input type="date" id="timesheet-week-end" disabled />
+                  </label>
+                  <button class="ghost" id="timesheet-refresh" type="button">Yenile</button>
+                </div>
+
+                <div class="kpi-bar" id="kpi-timesheet">
+                  <div class="kpi">
+                    <div class="kpi__label">Haftalık Toplam</div>
+                    <div class="kpi__value" id="timesheet-week-total">₺0,00</div>
+                  </div>
+                  <div class="kpi">
+                    <div class="kpi__label">Usta Bakiyesi</div>
+                    <div class="kpi__value" id="timesheet-worker-balance">₺0,00</div>
+                  </div>
+                  <div class="kpi">
+                    <div class="kpi__label">Kayıt Adedi</div>
+                    <div class="kpi__value" id="timesheet-count">0</div>
+                  </div>
+                </div>
+
+                <div class="timesheet-actions">
+                  <button class="primary" id="timesheet-add-row" type="button">Satır Ekle</button>
+                  <button class="ghost" id="timesheet-bulk" type="button">Toplu İş Kalemi</button>
+                  <button class="primary" id="timesheet-save" type="button">Puantaj Kaydet</button>
+                  <button class="ghost" id="timesheet-pdf" type="button">Puantaj PDF</button>
+                  <button class="primary" id="timesheet-pay" type="button">Haftalık Ödeme</button>
+                  <button class="ghost" id="timesheet-receipt" type="button">Ödeme Makbuzu PDF</button>
+                </div>
+
+                <p class="muted">
+                  Not: Puantaj satırları "İş Kalemi" olarak kaydedilir. Ödeme işlemi kasaya gider olarak yansır.
+                </p>
+
+                <div id="timesheet-bulk-wrap" class="table-card is-hidden">
+                  <h3>Toplu İş Kalemi</h3>
+                  <textarea id="timesheet-bulk-text" class="bulk-text" placeholder="Her satır: iş adı + fiyat (ör: Kombi montajı 3500)"></textarea>
+                  <div class="timesheet-actions">
+                    <button class="ghost" id="timesheet-bulk-preview" type="button">Ön İzle</button>
+                    <button class="primary" id="timesheet-bulk-apply" type="button">Toplu Ekle</button>
+                  </div>
+                  <div id="timesheet-bulk-preview-area"></div>
+                </div>
+
+                <div class="table-card">
+                  <h3>Haftalık İş Detayları (Yeni Satırlar)</h3>
+                  <table class="table" id="timesheet-new-table">
+                    <thead>
+                      <tr>
+                        <th>İş</th>
+                        <th>Miktar</th>
+                        <th>Birim</th>
+                        <th>Birim Fiyat</th>
+                        <th>Tutar</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="timesheet-new-body"></tbody>
+                  </table>
+                </div>
+
+                <div class="table-card">
+                  <div class="table-actions">
+                    <input id="timesheet-search" class="search" placeholder="İş ara..." />
+                    <button class="ghost" id="timesheet-search-btn" type="button">Ara</button>
+                  </div>
+                  <h3>Seçili Haftanın Kayıtları</h3>
+                  <table class="table" id="timesheet-saved-table">
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>İş</th>
+                        <th>Miktar</th>
+                        <th>Birim</th>
+                        <th>Birim Fiyat</th>
+                        <th>Tutar</th>
+                        <th>Not</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="timesheet-saved-body"></tbody>
+                  </table>
+                </div>
+
+                <div class="report-path" id="timesheet-status"></div>
+              </div>
+            </section>
+
+<section
+              class="module is-hidden"
+              id="customer-detail-module"
+              data-subpanel-label="Cari Ekstre"
+            >
+              <div class="module__header">
+                <h2>Cari Ekstre</h2>
+                <p>Seçili cari için satış ve tahsilat hareketleri.</p>
+              </div>
+              <div class="filter-bar">
+                <label>
+                  Cari Seç
+                  <select id="detail-customer"></select>
+                </label>
+                <label class="grow">
+                  Ara
+                  <input id="customer-detail-search" placeholder="Ara: iş kalemi / ödeme / hareket" />
+                </label>
+                <button class="ghost" id="customer-detail-search-btn">Ara</button>
+                <button class="primary" id="detail-report">Ekstre PDF</button>
+                <button class="ghost" id="customer-balance-report">Borçlular PDF</button>
+              </div>
+              <div class="detail-summary" id="detail-summary"></div>
+              <div class="tabs mtn-tabs" id="customer-detail-tabs">
+                <button class="tab-button" data-detail-tab="ledger">
+                  📒 Hareketler <span class="tab-count" id="detail-tab-count-ledger">0</span>
+                </button>
+                <button class="tab-button" data-detail-tab="jobs">
+                  🧰 İş Kalemleri <span class="tab-count" id="detail-tab-count-jobs">0</span>
+                </button>
+                <button class="tab-button" data-detail-tab="payments">
+                  💳 Ödemeler <span class="tab-count" id="detail-tab-count-payments">0</span>
+                </button>
+              </div>
+
+              <div class="tab-panel tab-panel--hidden" data-detail-tab-panel="jobs">
+              <form class="form-grid" id="customer-job-form">
+                <label>
+                  Tarih
+                  <input name="createdAt" type="date" id="customer-job-date" readonly />
+                </label>
+                <label>
+                  İş Kalemi
+                  <input name="title" placeholder="Hizmet / İş kalemi" />
+                </label>
+                <label>
+                  Miktar
+                  <input name="quantity" type="number" min="0" step="1" />
+                </label>
+                <label>
+                  Birim
+                  <input name="unit" placeholder="adet / m" />
+                </label>
+                <label>
+                  Birim Fiyat
+                  <input name="unitPrice" type="number" min="0" step="0.01" />
+                </label>
+                <label>
+                  Tutar
+                  <input name="total" type="number" min="0" step="0.01" readonly />
+                </label>
+                <label class="full-width">
+                  Açıklama
+                  <input name="note" placeholder="İş kalemi açıklaması" />
+                </label>
+                <input type="hidden" name="jobId" id="customer-job-id" />
+                <div class="form-actions">
+                  <button class="primary" type="submit" id="customer-job-submit">İş Kalemi Ekle</button>
+                  <button class="ghost is-hidden" type="button" id="customer-job-cancel">Vazgeç</button>
+                </div>
+              </form>
+              <div class="table-card table-card--sheet">
+                <h3>İş Kalemleri</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>İş Kalemi</th>
+                      <th>Miktar</th>
+                      <th>Birim</th>
+                      <th>Birim Fiyat</th>
+                      <th>Tutar</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customer-jobs-table"></tbody>
+                </table>
+              </div>
+
+              </div>
+              <div class="tab-panel tab-panel--hidden" data-detail-tab-panel="payments">
+                <div class="table-card">
+                  <h3>Ödemeler</h3>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Tür</th>
+                        <th>Ödeme Türü</th>
+                        <th>Tutar</th>
+                        <th>Bakiye</th>
+                        <th>Açıklama</th>
+                        <th>Durum</th>
+                        <th>İşlem</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customer-payments-table"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-panel" data-detail-tab-panel="ledger">
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Tür</th>
+                      <th>Ödeme Türü</th>
+                      <th>Tutar</th>
+                      <th>Bakiye</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detail-table"></tbody>
+                </table>
+              </div>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel" id="stocks-panel">
+            <section class="module" id="stocks-module">
+              <div class="module__header">
+                <h2>Stok & Depo</h2>
+                <p>Malzeme kartları oluşturun ve stok seviyelerini izleyin.</p>
+              </div>
+        <div class="kpi-bar" id="kpi-stocks">
+          <div class="kpi">
+            <div class="kpi__label">Toplam</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Bugün</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Durum</div>
+            <div class="kpi__value">-</div>
+          </div>
+        </div>
+
+              <form class="form-grid" id="stock-form">
+                <label>
+                  Giriş Tarihi
+                  <input name="createdAt" type="date" id="stock-created-at" />
+                </label>
+                <label>
+                  Stok Kodu
+                  <input name="code" placeholder="Otomatik" readonly />
+                </label>
+                <label>
+                  Malzeme Adı
+                  <input name="name" required placeholder="PEX 20mm Boru" />
+                </label>
+                <label>
+                  Çap
+                  <input name="diameter" placeholder="20 mm" />
+                </label>
+                <label>
+                  Birim
+                  <input name="unit" placeholder="m / adet" />
+                </label>
+                <label>
+                  Adet
+                  <input name="quantity" type="number" min="0" step="1" />
+                </label>
+                <label>
+                  Alış Fiyatı
+                  <input name="purchasePrice" type="number" min="0" step="0.01" />
+                </label>
+                <label>
+                  Satış Fiyatı
+                  <input name="salePrice" type="number" min="0" step="0.01" />
+                </label>
+                <label>
+                  KDV (%)
+                  <input name="vatRate" type="number" min="0" step="0.01" />
+                </label>
+                <label>
+                  Açıklama
+                  <input name="description" placeholder="Stok notu" />
+                </label>
+                <label>
+                  Kritik Seviye
+                  <input name="threshold" type="number" min="0" step="1" placeholder="Otomatik" />
+                </label>
+                <button class="primary" type="submit">Stok Kaydet</button>
+                <button class="ghost" type="button" id="stock-receipt-toggle">
+                  Fiş Ekle
+                </button>
+              </form>
+              <div class="table-card is-hidden" id="stock-receipt-card">
+                <div class="table-actions">
+                  <h3>Malzeme Fişi</h3>
+                  <button class="ghost" id="stock-receipt-add-row">+ Satır</button>
+                </div>
+                <div class="filter-bar">
+                  <label>
+                    Fiş Tarihi
+                    <input type="date" id="stock-receipt-date" readonly />
+                  </label>
+                  <label>
+                    Malzemeci
+                    <input id="stock-receipt-supplier" placeholder="Tedarikçi adı" />
+                  </label>
+                  <label>
+                    Depo
+                    <select id="stock-receipt-warehouse">
+                      <option value="Ana Depo">Ana Depo</option>
+                      <option value="Şantiye">Şantiye</option>
+                      <option value="Atölye">Atölye</option>
+                    </select>
+                  </label>
+                  <label>
+                    Fiş Görüntüsü
+                    <input id="stock-receipt-file" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                  </label>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Malzeme</th>
+                      <th>Çap</th>
+                      <th>Birim</th>
+                      <th>Adet</th>
+                      <th>Alış Fiyatı</th>
+                      <th>Kritik</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-receipt-body"></tbody>
+                </table>
+                <div class="table-actions">
+                  <label>
+                    Fiş Notu
+                    <input id="stock-receipt-note" placeholder="Malzemeci fiş notu" />
+                  </label>
+                  <button class="primary" id="stock-receipt-submit">
+                    Depoya Aktar
+                  </button>
+                </div>
+              </div>
+              <div class="table-card table-card--sheet" id="stock-list-card">
+                <h3>Stok Listesi</h3>
+                <div class="table-actions">
+                  <input id="stock-search" class="search" placeholder="Stok ara..." />
+                  <button class="ghost" id="stock-search-btn">Ara</button>
+                  <button class="ghost" id="stock-export-csv">Excel (CSV)</button>
+                  <button class="ghost" id="stock-export-pdf">PDF</button>
+                </div>
+                <div class="table-actions table-actions--compact">
+                  <span class="muted">Görünüm:</span>
+                  <label class="toggle-chip">
+                    <input type="checkbox" data-stock-column="purchase" checked />
+                    Alış Fiyatı
+                  </label>
+                  <label class="toggle-chip">
+                    <input type="checkbox" data-stock-column="sale" checked />
+                    Satış Fiyatı
+                  </label>
+                  <label class="toggle-chip">
+                    <input type="checkbox" data-stock-column="vat" checked />
+                    KDV
+                  </label>
+                </div>
+                <p class="search-hint" id="stock-search-suggestion"></p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Kod</th>
+                      <th>Malzeme</th>
+                      <th>Çap</th>
+                      <th>Birim</th>
+                      <th>Adet</th>
+                      <th data-stock-col="purchase">Alış</th>
+                      <th data-stock-col="sale">Satış</th>
+                      <th data-stock-col="vat">KDV</th>
+                      <th>Kritik Seviye</th>
+                      <th>Stok Durumu</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stocks-table"></tbody>
+                </table>
+                <p class="table-total">
+                  Depo Toplamı: <strong id="stocks-total">0</strong>
+                </p>
+              </div>
+
+              <div class="table-card" id="unit-conversion-card">
+                <div class="table-actions">
+                  <h3>Birim Dönüşüm Tanımları</h3>
+                </div>
+                <form class="form-grid" id="unit-conversion-form">
+                  <label>
+                    Ana Birim
+                    <input name="baseUnit" placeholder="adet" />
+                  </label>
+                  <label>
+                    Hedef Birim
+                    <input name="targetUnit" placeholder="koli" />
+                  </label>
+                  <label>
+                    Çarpan
+                    <input name="factor" type="number" min="0" step="0.01" placeholder="12" />
+                  </label>
+                  <label class="full-width">
+                    Açıklama
+                    <input name="note" placeholder="1 koli = 12 adet" />
+                  </label>
+                  <button class="primary" type="submit">Dönüşüm Ekle</button>
+                </form>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Ana Birim</th>
+                      <th>Hedef Birim</th>
+                      <th>Çarpan</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="unit-conversion-table"></tbody>
+                </table>
+              </div>
+
+              <div class="table-card" id="stock-import-card">
+                <div class="table-actions">
+                  <h3>Toplu Malzeme Aktarımı</h3>
+                  <button class="ghost" id="stock-import-reset">Temizle</button>
+                </div>
+                <div class="filter-bar">
+                  <label>
+                    Depo Seç
+                    <select id="stock-import-warehouse">
+                      <option value="Ana Depo">Ana Depo</option>
+                      <option value="Şantiye">Şantiye</option>
+                      <option value="Atölye">Atölye</option>
+                    </select>
+                  </label>
+                  <label>
+                    Excel / CSV / PDF
+                    <input id="stock-import-file" type="file" accept=".csv,.xlsx,.pdf" />
+                  </label>
+                  <button class="primary" id="stock-import-preview">Önizleme</button>
+                  <button class="ghost" id="stock-import-apply">Onayla & Aktar</button>
+                </div>
+                <p class="search-hint" id="stock-import-summary">Dosya seçilmedi.</p>
+                <div class="table-card table-card--sheet">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Durum</th>
+                        <th>Stok Kodu</th>
+                        <th>Malzeme Adı</th>
+                        <th>Adet</th>
+                        <th>Birim</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stock-import-table"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="table-card" id="stock-receipts-list-card">
+                <div class="table-actions">
+                  <h3>Fiş Listesi</h3>
+                  <button class="primary" id="stock-receipts-transfer">Depoya Aktar</button>
+                </div>
+                <div class="filter-bar">
+                  <label>
+                    Tarih Aralığı
+                    <input type="date" id="receipt-filter-start" />
+                  </label>
+                  <label>
+                    <span class="sr-only">Bitiş</span>
+                    <input type="date" id="receipt-filter-end" />
+                  </label>
+                  <label>
+                    Cari / Tedarikçi
+                    <input id="receipt-filter-supplier" placeholder="Tedarikçi adı" />
+                  </label>
+                  <label>
+                    Depo
+                    <select id="receipt-filter-warehouse">
+                      <option value="">Tümü</option>
+                      <option value="Ana Depo">Ana Depo</option>
+                      <option value="Şantiye">Şantiye</option>
+                      <option value="Atölye">Atölye</option>
+                    </select>
+                  </label>
+                  <label>
+                    Tür
+                    <select id="receipt-filter-status">
+                      <option value="">Tümü</option>
+                      <option value="transferred">Aktarılan</option>
+                      <option value="pending">Bekleyen</option>
+                    </select>
+                  </label>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Tarih</th>
+                      <th>Depo</th>
+                      <th>Tedarikçi</th>
+                      <th>Kalem</th>
+                      <th>Tutar</th>
+                      <th>Durum</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-receipts-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="module" id="stock-movement-module">
+              <div class="module__header">
+                <h2>Stok Hareketi</h2>
+                <p>Stok giriş/çıkış fişi oluşturun.</p>
+              </div>
+              <form class="form-grid" id="stock-movement-form">
+                <label>
+                  Tarih
+                  <input name="createdAt" type="date" id="stock-movement-date" readonly />
+                </label>
+                <label>
+                  Malzeme Seç
+                  <select id="movement-stock"></select>
+                </label>
+                <label>
+                  Hareket Türü
+                  <select name="type">
+                    <option value="giris">Giriş</option>
+                    <option value="cikis">Çıkış</option>
+                  </select>
+                </label>
+                <label>
+                  Miktar
+                  <input name="quantity" type="number" min="0" step="1" />
+                </label>
+                <label class="full-width">
+                  Açıklama
+                  <input name="note" placeholder="Fiş açıklaması" />
+                </label>
+                <button class="primary" type="submit">Hareket Kaydet</button>
+              </form>
+              <div class="table-card table-card--sheet">
+                <h3>Stok Hareketleri</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Malzeme</th>
+                      <th>Tür</th>
+                      <th>Miktar</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-movements-table"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel" id="stock-list-panel">
+            <section class="module" id="stock-list-module">
+              <div class="module__header">
+                <h2>Malzeme Stok Listesi</h2>
+                <p>Depo bazlı güncel stoklar. Sade arama ile hızla filtreleyin.</p>
+              </div>
+              <div class="table-card">
+                <div class="table-actions">
+                  <input id="stock-list-search" class="search" placeholder="Stok adı / kodu / Q-DN ara..." />
+                  <button class="ghost" id="stock-list-search-btn">Ara</button>
+                  <button class="primary" id="stock-list-add-to-sale">Toplu Satışa Aktar</button>
+                </div>
+                <p class="search-hint" id="stock-list-empty"></p>
+                <div class="table-card table-card--sheet">
+                  <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Stok Kodu</th>
+                      <th>Stok Adı</th>
+                      <th>Depo</th>
+                      <th>Mevcut Adet</th>
+                      <th>Birim</th>
+                      <th>Durum</th>
+                      <th>Son Güncelleme</th>
+                    </tr>
+                  </thead>
+                    <tbody id="stock-list-table"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="table-card" id="inventory-count-card">
+                <div class="table-actions">
+                  <h3>Depo Sayım Listesi</h3>
+                  <button class="ghost" id="inventory-count-add-row">+ Satır</button>
+                </div>
+                <div class="filter-bar">
+                  <label>
+                    Depo
+                    <select id="inventory-count-warehouse">
+                      <option value="Ana Depo">Ana Depo</option>
+                      <option value="Şantiye">Şantiye</option>
+                      <option value="Atölye">Atölye</option>
+                    </select>
+                  </label>
+                  <label>
+                    Sayım Tarihi
+                    <input type="date" id="inventory-count-date" />
+                  </label>
+                  <label class="full-width">
+                    Açıklama
+                    <input id="inventory-count-note" placeholder="Sayım notu" />
+                  </label>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Malzeme</th>
+                      <th>Birim</th>
+                      <th>Adet</th>
+                      <th>Alış</th>
+                      <th>Satış</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventory-count-body"></tbody>
+                </table>
+                <div class="table-actions">
+                  <button class="primary" id="inventory-count-transfer">Depoya Aktar</button>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel" id="sales-panel">
+            <section class="module" id="sales-module">
+              <div class="module__header">
+                <h2>Satışlar</h2>
+                <p>Fatura ve satış hareketleri listesi.</p>
+              </div>
+        <div class="kpi-bar" id="kpi-offers">
+          <div class="kpi">
+            <div class="kpi__label">Toplam</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Bugün</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Durum</div>
+            <div class="kpi__value">-</div>
+          </div>
+        </div>
+
+              <div class="offer-home" id="offer-home">
+                <div class="offer-home__intro">
+                  <h3>Teklif Menüsü</h3>
+                  <p>İç tesisat, endüstriyel ve kayıtlı teklifler için seçim yapın.</p>
+                </div>
+                <div class="offer-home__grid">
+                  <button
+                    class="offer-home__tile"
+                    data-offer-home="internal"
+                    data-offer-label="İç Tesisat"
+                  >
+                    <span class="offer-home__title">İç Tesisat</span>
+                    <span class="offer-home__meta">Konut ve iç hat teklif şablonları</span>
+                  </button>
+                  <button
+                    class="offer-home__tile"
+                    data-offer-home="industrial"
+                    data-offer-label="Endüstriyel"
+                  >
+                    <span class="offer-home__title">Endüstriyel</span>
+                    <span class="offer-home__meta">Fabrika ve saha teklifleri</span>
+                  </button>
+                  <button
+                    class="offer-home__tile offer-home__tile--ghost"
+                    data-offer-home="saved"
+                    data-offer-label="Tekliflerim"
+                  >
+                    <span class="offer-home__title">Tekliflerim</span>
+                    <span class="offer-home__meta">Kayıtlı teklif listesi</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+          <div class="offer-workspace is-hidden" id="offer-workspace">
+            <div class="offer-workspace__header">
+              <button class="ghost" data-offer-back>← Teklif Menüsüne Dön</button>
+              <h3 id="offer-workspace-title">Teklif</h3>
+            </div>
+            <div class="tabs" id="offer-tabs">
+              <button class="tab-button tab-button--active" data-offer-tab="internal">
+                İç Tesisat Teklif
+              </button>
+              <button class="tab-button" data-offer-tab="industrial">
+                Endüstriyel Doğalgaz Teklif
+              </button>
+              <button class="tab-button" data-offer-tab="saved">
+                Tekliflerim
+              </button>
+            </div>
+
+          <section class="offer tab-panel tab-panel--hidden" data-offer-tab-panel="internal">
+              <div class="offer__header">
+                <h2>İç Tesisat Teklif - Fatura Görünümü</h2>
+                <div class="offer__actions">
+                  <button id="add-row">+ Satır Ekle</button>
+                  <button class="primary" id="offer-pdf">Fatura PDF</button>
+                </div>
+              </div>
+              <div class="offer__document">
+                <div class="offer__brand">
+                  <img class="offer__logo" id="offer-logo" alt="Firma logosu" />
+                  <div>
+                    <h3 id="offer-company-name">MTN Enerji</h3>
+                    <p id="offer-company-meta">Vergi Dairesi • Vergi No</p>
+                    <p id="offer-company-address">Firma adresi</p>
+                  </div>
+                </div>
+                <div class="offer__info">
+                  <div>
+                    <label>Teklif Başlığı</label>
+                    <input id="offer-title" placeholder="İç tesisat teklifi" />
+                  </div>
+                  <div>
+                    <label>Teklif Tarihi</label>
+                    <input id="offer-date" type="date" />
+                  </div>
+                  <div>
+                    <label>İrsaliye No</label>
+                    <input id="offer-waybill" placeholder="IRS-2024-001" />
+                  </div>
+                </div>
+              </div>
+              <div class="offer__meta">
+                <label>
+                  Cari Seç
+                  <select id="offer-customer"></select>
+                </label>
+                <label>
+                  Ödeme Türü
+                  <select id="offer-payment">
+                    <option value="nakit">Nakit</option>
+                    <option value="eft">EFT</option>
+                    <option value="kart">Kart</option>
+                  </select>
+                </label>
+                <button class="primary" id="offer-save">Satış Kaydet</button>
+                <label>
+                  Kar Marjı (%)
+                  <input id="offer-margin" type="number" min="0" step="0.1" value="0" />
+                </label>
+                <button class="ghost" id="offer-apply-margin">Tümüne Uygula</button>
+              </div>
+              <table class="offer__table">
+                <thead>
+                  <tr>
+                    <th>Malzeme</th>
+                    <th>Miktar</th>
+                    <th>Birim</th>
+                    <th>Birim Fiyat</th>
+                    <th>Tutar</th>
+                    <th>İşlem</th>
+                  </tr>
+                </thead>
+                <tbody id="offer-body"></tbody>
+              </table>
+              <div class="offer__picker">
+                <div class="offer__picker-header">
+                  <h4>Malzeme Seçimi</h4>
+                  <div class="offer__picker-search">
+                    <input id="offer-stock-search" placeholder="Malzeme ara..." />
+                    <button class="ghost" id="offer-stock-search-btn">Ara</button>
+                  </div>
+                </div>
+                <div class="offer__picker-list" id="offer-stock-list"></div>
+              </div>
+              <div class="offer__summary">
+                <label>
+                  KDV Oranı (%)
+                  <input id="offer-vat" type="number" min="0" step="1" value="20" />
+                </label>
+                <label>
+                  KDV Tutarı (Manuel)
+                  <input id="offer-vat-manual" type="number" min="0" step="0.01" placeholder="0" />
+                </label>
+                <div class="offer__totals">
+                  <div>
+                    <span>Ara Toplam</span>
+                    <strong id="offer-subtotal">₺0,00</strong>
+                  </div>
+                  <div>
+                    <span>KDV Toplam</span>
+                    <strong id="offer-vat-total">₺0,00</strong>
+                  </div>
+                  <div>
+                    <span>Genel Toplam</span>
+                    <strong id="offer-total">₺0,00</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="offer__footer">
+                <button class="primary" id="offer-save-proposal">Teklifi Kaydet</button>
+                <p class="muted">PDF oluşturma sonrası teklif kaydı saklanır.</p>
+              </div>
+            </section>
+            <section class="offer tab-panel tab-panel--hidden" data-offer-tab-panel="industrial">
+              <div class="offer__header">
+                <h2>Endüstriyel Doğalgaz Teklif - Fatura Görünümü</h2>
+                <div class="offer__actions">
+                  <button id="add-row-industrial">+ Satır Ekle</button>
+                  <button class="primary" id="offer-pdf-industrial">Fatura PDF</button>
+                </div>
+              </div>
+              <div class="offer__document">
+                <div class="offer__brand">
+                  <img class="offer__logo" id="offer-logo-industrial" alt="Firma logosu" />
+                  <div>
+                    <h3 id="offer-company-name-industrial">MTN Enerji</h3>
+                    <p id="offer-company-meta-industrial">Vergi Dairesi • Vergi No</p>
+                    <p id="offer-company-address-industrial">Firma adresi</p>
+                  </div>
+                </div>
+                <div class="offer__info">
+                  <div>
+                    <label>Teklif Başlığı</label>
+                    <input id="offer-title-industrial" placeholder="Endüstriyel teklif" />
+                  </div>
+                  <div>
+                    <label>Teklif Tarihi</label>
+                    <input id="offer-date-industrial" type="date" />
+                  </div>
+                  <div>
+                    <label>İrsaliye No</label>
+                    <input id="offer-waybill-industrial" placeholder="IRS-2024-002" />
+                  </div>
+                </div>
+              </div>
+              <table class="offer__table">
+                <thead>
+                  <tr>
+                    <th>Malzeme</th>
+                    <th>Miktar</th>
+                    <th>Birim</th>
+                    <th>Birim Fiyat</th>
+                    <th>Tutar</th>
+                    <th>İşlem</th>
+                  </tr>
+                </thead>
+                <tbody id="offer-body-industrial"></tbody>
+              </table>
+              <div class="offer__picker">
+                <div class="offer__picker-header">
+                  <h4>Malzeme Seçimi</h4>
+                  <div class="offer__picker-search">
+                    <input id="offer-stock-search-industrial" placeholder="Malzeme ara..." />
+                    <button class="ghost" id="offer-stock-search-industrial-btn">Ara</button>
+                  </div>
+                </div>
+                <div class="offer__picker-list" id="offer-stock-list-industrial"></div>
+              </div>
+              <div class="offer__summary">
+                <label>
+                  KDV Oranı (%)
+                  <input id="offer-vat-industrial" type="number" min="0" step="1" value="20" />
+                </label>
+                <label>
+                  KDV Tutarı (Manuel)
+                  <input id="offer-vat-manual-industrial" type="number" min="0" step="0.01" placeholder="0" />
+                </label>
+                <div class="offer__totals">
+                  <div>
+                    <span>Ara Toplam</span>
+                    <strong id="offer-subtotal-industrial">₺0,00</strong>
+                  </div>
+                  <div>
+                    <span>KDV Toplam</span>
+                    <strong id="offer-vat-total-industrial">₺0,00</strong>
+                  </div>
+                  <div>
+                    <span>Genel Toplam</span>
+                    <strong id="offer-total-industrial">₺0,00</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="offer__footer">
+                <button class="primary" id="offer-save-proposal-industrial">Teklifi Kaydet</button>
+                <p class="muted">PDF oluşturma sonrası teklif kaydı saklanır.</p>
+              </div>
+            </section>
+            <section class="offer tab-panel tab-panel--hidden" data-offer-tab-panel="saved">
+              <div class="offer__header">
+                <h2>Tekliflerim</h2>
+                <div class="offer__actions">
+                  <input class="input input--sm" id="offer-search" placeholder="Ara: teklif / cari / irsl / no" />
+                  <button class="ghost" id="offer-refresh">Listeyi Yenile</button>
+                </div>
+              </div>
+              <div class="table-card table-card--sheet">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Teklif</th>
+                      <th>Cari</th>
+                      <th>Tutar</th>
+                      <th>PDF</th>
+                      <th>Cariye</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="offer-table"></tbody>
+                </table>
+              </div>
+            </section>
+            </div>
+          </section>
+
+          <section class="panel" id="invoices-panel">
+            <section class="module" id="invoices-module">
+              <div class="module__header">
+                <h2>Faturalarım</h2>
+                <p>Fatura dosyalarını (PDF/JPG/PNG) yükleyin ve arşivleyin.</p>
+              </div>
+              <form class="form-grid" id="invoice-form">
+                <label>
+                  Fatura Türü
+                  <select name="invoiceType" id="invoice-type">
+                    <option value="alis">Alış</option>
+                    <option value="satis">Satış</option>
+                  </select>
+                </label>
+                <label>
+                  Fatura Tarihi
+                  <input type="date" name="createdAt" id="invoice-date" />
+                </label>
+                <label>
+                  Cari / Tedarikçi
+                  <input name="vendor" placeholder="Firma adı" />
+                </label>
+                <label>
+                  Tutar
+                  <input name="amount" type="number" min="0" step="0.01" />
+                </label>
+                <label>
+                  Dosya
+                  <input id="invoice-file" type="file" accept=".jpg,.jpeg" />
+                </label>
+                <label class="full-width">
+                  Açıklama
+                  <input name="note" placeholder="Fatura açıklaması" />
+                </label>
+                <button class="primary" type="submit">Fatura Kaydet</button>
+              </form>
+              <div class="table-card table-card--sheet">
+                <h3>Kayıtlı Faturalar</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tür</th>
+                      <th>Tarih</th>
+                      <th>Firma</th>
+                      <th>Tutar</th>
+                      <th>Dosya</th>
+                      <th>Not</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoices-table"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel" id="cash-panel">
+            <section class="module" id="cash-module">
+              <div class="module__header">
+                <h2>Kasa & Banka</h2>
+                <p>Gelir ve gider işlemlerini takip edin.</p>
+              </div>
+        <div class="kpi-bar" id="kpi-cash">
+          <div class="kpi">
+            <div class="kpi__label">Toplam</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Bugün</div>
+            <div class="kpi__value">-</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__label">Durum</div>
+            <div class="kpi__value">-</div>
+          </div>
+        </div>
+
+              <div class="filter-bar">
+                <label>
+                  Başlangıç
+                  <input type="date" id="cash-start" />
+                </label>
+                <label>
+                  Bitiş
+                  <input type="date" id="cash-end" />
+                </label>
+                <label>
+                  Tür
+                  <select id="cash-type">
+                    <option value="">Hepsi</option>
+                    <option value="gelir">Gelir</option>
+                    <option value="gider">Gider</option>
+                  </select>
+                </label>
+              </div>
+              <form class="form-grid" id="cash-form">
+                <label>
+                  Tarih
+                  <input name="createdAt" type="date" id="cash-date" readonly />
+                </label>
+                <div class="full-width">
+                  <span class="label">İşlem Türü</span>
+                  <div class="toggle-group" id="cash-type-buttons">
+                    <button class="toggle-button toggle-button--active" type="button" data-cash-type="gelir">
+                      Tahsilat Yap
+                    </button>
+                    <button class="toggle-button" type="button" data-cash-type="gider">
+                      Borç Ödeme
+                    </button>
+                  </div>
+                  <input type="hidden" name="type" id="cash-type-input" value="gelir" />
+                </div>
+                <label>
+                  Cari
+                  <select name="customerId" id="cash-customer">
+                    <option value="">Cari Seç</option>
+                  </select>
+                </label>
+                <label>
+                  Ödeme Türü
+                  <select name="paymentMethod" id="cash-payment-method">
+                    <option value="Nakit">Nakit</option>
+                    <option value="EFT">EFT</option>
+                    <option value="Havale">Havale</option>
+                    <option value="Çek">Çek</option>
+                    <option value="Kart">Kart</option>
+                    <option value="Senet">Senet</option>
+                  </select>
+                </label>
+                <label>
+                  Tutar
+                  <input name="amount" type="number" min="0" step="0.01" />
+                </label>
+                <label class="full-width checkbox cash__receipt-row">
+                  <input type="checkbox" id="cash-receipt-toggle" />
+                  Tahsilat sonrası makbuz oluştur
+                </label>
+<label class="full-width">
+                  Açıklama
+                  <input name="note" placeholder="İşlem açıklaması" />
+                </label>
+                <button class="primary" type="submit">Kasa Kaydet</button>
+              </form>
+              <div class="table-card">
+                <h3>Son Kasa Hareketleri</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Tür</th>
+                      <th>Cari</th>
+                      <th>Ödeme Türü</th>
+                      <th>Tutar</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cash-table"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel" id="reports-panel">
+            <section class="module" id="reports-module">
+              <div class="module__header">
+                <h2>Raporlar</h2>
+                <p>PDF raporlarını tek tıkla oluşturun.</p>
+              </div>
+              <div class="report-actions">
+                <button class="primary" id="report-customers">Cari Ekstre (PDF)</button>
+                <button class="primary" id="report-stocks">Stok Raporu (PDF)</button>
+                <button class="primary" id="report-cash">Satış Raporu (PDF)</button>
+                <button class="primary" id="report-stock-movements">Stok Hareket Raporu</button>
+                <button class="primary" id="report-cash-summary">Kasa Özet Raporu</button>
+              </div>
+              <p class="report-path" id="report-path"></p>
+            </section>
+            <section class="module" id="accounts-module">
+              <div class="module__header">
+                <h2>Hesap Planı</h2>
+                <p>Şirket hesap planı ve fiş eşleştirmeleri.</p>
+              </div>
+              <form class="form-grid" id="account-form">
+                <label>
+                  Hesap Kodu
+                  <input name="code" required placeholder="120" />
+                </label>
+                <label>
+                  Hesap Adı
+                  <input name="name" required placeholder="Alıcılar" />
+                </label>
+                <label>
+                  Tür
+                  <select name="type">
+                    <option value="varlik">Varlık</option>
+                    <option value="yukumluluk">Yükümlülük</option>
+                    <option value="gelir">Gelir</option>
+                    <option value="gider">Gider</option>
+                    <option value="sermaye">Sermaye</option>
+                  </select>
+                </label>
+                <label class="full-width">
+                  Açıklama
+                  <input name="description" placeholder="Hesap açıklaması" />
+                </label>
+                <button class="primary" type="submit">Hesap Ekle</button>
+              </form>
+              <div class="table-card table-card--sheet">
+                <h3>Hesap Listesi</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Kod</th>
+                      <th>Hesap</th>
+                      <th>Tür</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="accounts-table"></tbody>
+                </table>
+              </div>
+            </section>
+            <section class="module" id="ledger-module">
+              <div class="module__header">
+                <h2>Muhasebe Fişleri</h2>
+                <p>Gelir/gider ve stok hareketlerinden oluşan fiş özeti.</p>
+              </div>
+              <div class="table-card table-card--sheet">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Hesap</th>
+                      <th>Borç</th>
+                      <th>Alacak</th>
+                      <th>Açıklama</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ledger-table"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel" id="assistant-panel">
+            <section class="module">
+              <div class="module__header">
+                <h2>Muhasebe Asistanı</h2>
+                <p>Özetler, hatırlatmalar ve öneriler burada.</p>
+              </div>
+              <div class="assistant-grid">
+                <article class="card">
+                  <h3>Günlük Özet</h3>
+                  <ul id="assistant-daily"></ul>
+                </article>
+                <article class="card">
+                  <h3>Hatırlatmalar</h3>
+                  <ul id="assistant-reminders"></ul>
+                </article>
+                <article class="card">
+                  <h3>Öneriler</h3>
+                  <ul id="assistant-suggestions"></ul>
+                </article>
+                <article class="card">
+                  <h3>Ödeme Takvimi</h3>
+                  <ul id="assistant-payments"></ul>
+                </article>
+              </div>
+              <div class="assistant-actions">
+                <button class="primary" id="assistant-refresh">Özetleri Güncelle</button>
+                <p class="assistant-status" id="assistant-status"></p>
+              </div>
+            </section>
+
+          <!-- Mühendislik paneli -->
+          <section class="panel" id="engineering-panel">
+            <section class="module">
+              <div class="module__header">
+                <h2>Mühendislik</h2>
+                <p>Hesaplamalar ve dosya yönetimi paneli.</p>
+              </div>
+              <div class="engineering-grid">
+                <!-- Sol tarafta kategori butonları -->
+                <div class="engineering-nav">
+                  <button class="engineering-btn" data-eng="dogalgaz">Doğalgaz</button>
+                  <button class="engineering-btn" data-eng="sıhhi">Sıhhi Pratik</button>
+                  <button class="engineering-btn" data-eng="yangin">Yangın Pratik</button>
+                  <button class="engineering-btn" data-eng="isitma">Isıtma Pratik</button>
+                  <button class="engineering-btn" data-eng="santiye">Şantiye Araçları</button>
+                  <button class="engineering-btn" data-eng="evrak">Evrak Merkezi</button>
+                </div>
+                <!-- Sağ tarafta içerik alanı -->
+                <div class="engineering-content">
+                  <!-- Index yükleme -->
+                  <div class="engineering-section" id="engineering-index-section">
+                    <h3>Hesaplama Aracı</h3>
+                    <p class="muted">İzin verilen index isimlerini girerek (index, demo_index, isitma_index) hesaplama aracını açabilirsiniz.</p>
+                    <div class="form-inline">
+                      <input id="engineering-index-input" placeholder="index adı" />
+                      <button class="primary" id="engineering-index-open">Aç</button>
+                    </div>
+                    <div id="engineering-index-result" class="engineering-result"></div>
+                  </div>
+                  <!-- Dosya yükleme ve listeleme -->
+                    <div class="engineering-section" id="engineering-files-section">
+                    <h3>Dosya Yönetimi</h3>
+                    <p class="muted">Excel veya index dosyalarını ekleyip listeleyebilirsiniz. ERP verilerine erişim yoktur.</p>
+                    <div class="form-inline">
+                      <input type="file" id="engineering-file-upload" accept=".xlsx,.xls,.csv,.html" />
+                    </div>
+                    <ul id="engineering-file-list" class="file-list"></ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+          </section>
+
+          <section class="panel" id="settings-panel" data-role="admin">
+            <section class="module" id="settings-module">
+              <div class="module__header">
+                <h2>Otomatik Yedekleme & Taşıma</h2>
+                <p>Başka bilgisayara otomatik kopya ve bulut yedekleme ayarları.</p>
+              </div>
+              <div class="table-card">
+                <h3>Manuel Yedek</h3>
+                <p class="muted">Tek tıkla yedek alıp klasöre erişebilirsiniz.</p>
+                <div class="backup-actions">
+                  <button class="primary" id="backup-now">Yedek Al</button>
+                  <button class="ghost" id="backup-open" disabled>Yedek Klasörünü Aç</button>
+                </div>
+                <p class="muted">
+                  Son yedek: <strong id="last-backup">Henüz yok</strong>
+                </p>
+                <p class="report-path" id="backup-path"></p>
+              </div>
+              <div class="table-card">
+                <h3>Firma Bilgileri</h3>
+                <form class="form-grid" id="company-form">
+                  <label>
+                    Firma Ünvanı
+                    <input id="company-name" name="companyName" />
+                  </label>
+                  <label>
+                    Yetkili
+                    <input id="company-owner" name="companyOwner" />
+                  </label>
+                  <label>
+                    Vergi Dairesi
+                    <input id="company-tax-office" name="taxOffice" />
+                  </label>
+                  <label>
+                    Vergi No
+                    <input id="company-tax-number" name="taxNumber" />
+                  </label>
+                  <label>
+                    Telefon
+                    <input id="company-phone" name="companyPhone" />
+                  </label>
+                  <label>
+                    IBAN
+                    <input id="company-iban" name="companyIban" />
+                  </label>
+                  <label>
+                    Banka
+                    <input id="company-bank" name="companyBank" />
+                  </label>
+                  <label class="full-width">
+                    Adres
+                    <input id="company-address" name="companyAddress" />
+                  </label>
+                  <button class="primary" type="submit">Firma Kaydet</button>
+                </form>
+              </div>
+              <div class="table-card theme-settings">
+                <h3>Tema Renkleri</h3>
+                <p class="muted">
+                  Yönetici olarak ana renkleri güncelleyebilir ve tüm ekranda
+                  anında uygulayabilirsiniz.
+                </p>
+                <form class="form-grid" id="theme-form">
+                  <label>
+                    Ana Renk
+                    <input name="primary" type="color" id="theme-primary" />
+                  </label>
+                  <label>
+                    Vurgu Rengi
+                    <input name="accent" type="color" id="theme-accent" />
+                  </label>
+                  <button class="primary" type="submit">Temayı Uygula</button>
+                </form>
+                <p class="report-path" id="theme-status"></p>
+              </div>
+              <div class="table-card user-management">
+                <h3>Kullanıcı Yönetimi</h3>
+                <p class="muted">
+                  Roller: Yönetici tüm ayarlara erişir, Muhasebeci günlük işlemlerle
+                  sınırlıdır.
+                </p>
+                <table class="user-table">
+                  <thead>
+                    <tr>
+                      <th>Kullanıcı</th>
+                      <th>Rol</th>
+                      <th>Durum</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="user-table"></tbody>
+                </table>
+                <form class="form-grid user-form" id="user-form">
+                  <label>
+                    Ad Soyad
+                    <input name="displayName" placeholder="Ali Veli" />
+                  </label>
+                  <label>
+                    Kullanıcı Adı
+                    <input name="username" required placeholder="ali.veli" />
+                  </label>
+                  <label>
+                    Şifre
+                    <input name="password" type="password" required />
+                  </label>
+                  <label>
+                    Rol
+                    <select name="role">
+                      <option value="admin">Yönetici</option>
+                      <option value="accountant" selected>Muhasebeci</option>
+                    </select>
+                  </label>
+                  <button class="primary" type="submit">Kullanıcı Ekle</button>
+                </form>
+                <p class="report-path" id="user-form-error"></p>
+              </div>
+
+              <div class="table-card security-management">
+                <h3>Güvenlik &amp; Veri Sıfırlama</h3>
+                <p class="muted">Bu işlem tüm verileri geri döndürülemez şekilde siler. Sadece yönetici tarafından 1453 şifresiyle yapılabilir.</p>
+                <div class="form-inline">
+                  <input id="reset-password" type="password" placeholder="Şifre (1453)" />
+                  <button class="danger" id="reset-data">Verileri Sıfırla</button>
+                </div>
+                <p class="report-path" id="reset-status"></p>
+              </div>
+              <form class="form-grid" id="settings-form">
+                <label>
+                  Otomatik Taşıma Klasörü
+                  <input id="auto-sync-path" placeholder="\\\\SUNUCU\\MTN-YEDEK" />
+                </label>
+                <label>
+                  Aktif
+                  <select id="auto-sync-enabled">
+                    <option value="false">Hayır</option>
+                    <option value="true">Evet</option>
+                  </select>
+                </label>
+                <label>
+                  Bulut Yedek Klasörü
+                  <input id="cloud-backup-path" placeholder="C:\\Users\\...\\OneDrive\\MTN" />
+                </label>
+                <label>
+                  Aktif
+                  <select id="cloud-backup-enabled">
+                    <option value="false">Hayır</option>
+                    <option value="true">Evet</option>
+                  </select>
+                </label>
+                <label>
+                  Otomatik Yedek
+                  <select id="auto-backup-enabled">
+                    <option value="false">Hayır</option>
+                    <option value="true">Evet</option>
+                  </select>
+                </label>
+                <label>
+                  Stok Değerleme
+                  <select id="stock-valuation">
+                    <option value="ortalama">Ortalama</option>
+                    <option value="fifo">FIFO</option>
+                  </select>
+                </label>
+                <button class="primary" type="submit">Ayarları Kaydet</button>
+              </form>
+              <div class="table-card">
+                <div class="table-actions">
+                  <h3>Yedekten Geri Yükleme</h3>
+                </div>
+                <div class="filter-bar">
+                  <label class="full-width">
+                    Yedek Dosyası (yedek.json)
+                    <input id="restore-backup-file" type="file" accept=".json" />
+                  </label>
+                  <button class="primary" id="restore-backup">Yedeği Geri Yükle</button>
+                </div>
+                <p class="muted" id="restore-backup-status"></p>
+              </div>
+              <p class="muted">
+                Son otomatik yedek: <strong id="last-auto-backup">Henüz yok</strong>
+              </p>
+              <div class="table-card">
+                <h3>Lisans</h3>
+                <p class="muted">
+                  Lisans kontrolü için altyapı hazırdır. Tek bilgisayar ve tek
+                  kullanıcı mantığında çalışır.
+                </p>
+                <div class="license-row">
+                  <input
+                    id="license-key"
+                    placeholder="Lisans anahtarı"
+                    readonly
+                  />
+                  <button class="ghost" id="license-check">Lisans Kontrol</button>
+                </div>
+              </div>
+              <div class="settings-danger">
+                <!-- Tüm verileri sıfırlama kartı kaldırıldı; güvenlik yönetimi bölümünde parola ile sıfırlama yapılır -->
+              </div>
+              <p class="report-path" id="settings-status"></p>
+              <div class="table-card">
+                <h3>İşlem Günlüğü</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Modül</th>
+                      <th>İşlem</th>
+                      <th>Detay</th>
+                    </tr>
+                  </thead>
+                  <tbody id="audit-log-table"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+        </div>
+        <footer class="app-footer">
+          Bu program <strong id="footer-company-name">MTN Enerji Mühendislik</strong>
+          / <span id="footer-company-owner">Metin Döş</span> tarafından kodlanmış
+          ve tasarlanmıştır. © Tüm hakları saklıdır.
+        </footer>
+        <button class="assistant-fab">YZ Asistan (F1)</button>
+      </main>
+    </div>
+
+    
+    <script src="./mtn/mtn_toast.js"></script>
+    <script src="./mtn/mtn_sound.js"></script>
+    <script src="./mtn/mtn_tts.js"></script>
+    <script src="./mtn/mtn_theme.js"></script>
+    <script src="./mtn/mtn_codes.js"></script>
+    <script src="./mtn/mtn_rules.js"></script>
+    <script src="./mtn/mtn_nav.js"></script>
+    <script src="./mtn/mtn_assistant.js"></script>
+
+    <script src="app.js"></script>
+  
+<!-- MTN: Global Hata Modalı -->
+<style>
+  .mtn-err-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:10000}
+  .mtn-err-modal.show{display:flex}
+  .mtn-err-card{background:#0b1020;color:#fff;width:860px;max-height:80vh;border:1px solid #2a2f45;border-radius:10px;overflow:hidden}
+  .mtn-err-head{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #2a2f45}
+  .mtn-err-body{padding:12px;max-height:60vh;overflow:auto;white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px}
+  .mtn-err-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px;border-top:1px solid #2a2f45}
+</style>
+<div id="mtn-error-modal" class="mtn-err-modal" role="dialog" aria-modal="true">
+  <div class="mtn-err-card">
+    <div class="mtn-err-head">
+      <strong>Program Hatası</strong>
+      <span class="muted" style="opacity:.8">Detayı kopyalayıp gönder</span>
+      <div style="flex:1"></div>
+      <button class="ghost" id="mtn-error-close">Kapat</button>
+    </div>
+    <div class="mtn-err-body" id="mtn-error-body"></div>
+    <div class="mtn-err-foot">
+      <button class="ghost" id="mtn-error-copy">Kopyala</button>
+      <button class="primary" id="mtn-error-ok">Tamam</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

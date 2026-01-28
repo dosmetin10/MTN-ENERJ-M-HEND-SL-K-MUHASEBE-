@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "endpoints": {
+    "POST /fis": {
+      "request": {
+        "type": "object",
+        "required": ["tur", "kalemler"],
+        "properties": {
+          "tur": { "type": "string", "enum": ["SATIS","SATIS_IADE","ALIS","ALIS_IADE","TRANSFER","DÜZELTME"] },
+          "cari_id": { "type": "string", "format": "uuid" },
+          "para_birim": { "type": "string", "default": "TRY" },
+          "kalemler": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["stok_id","miktar","birim","birim_fiyat"],
+              "properties": {
+                "stok_id": { "type": "string", "format": "uuid" },
+                "miktar": { "type": "number" },
+                "birim": { "type": "string" },
+                "birim_fiyat": { "type": "number" },
+                "iskonto_oran": { "type": "number", "minimum": 0 },
+                "kdv_oran": { "type": "number", "minimum": 0 }
+              }
+            }
+          },
+          "tahsilat": { "type": "object", "properties": { "tutar": { "type": "number", "exclusiveMinimum": 0 } } },
+          "odeme": { "type": "object", "properties": { "tutar": { "type": "number", "exclusiveMinimum": 0 } } }
+        }
+      },
+      "response": { "type": "object", "required": ["fis_id"], "properties": { "fis_id": { "type": "string", "format": "uuid" } } },
+      "example": {
+        "tur": "SATIS",
+        "cari_id": "11111111-1111-1111-1111-111111111111",
+        "para_birim": "TRY",
+        "kalemler": [
+          { "stok_id": "22222222-2222-2222-2222-222222222222", "miktar": 3, "birim": "adet", "birim_fiyat": 100, "kdv_oran": 20 }
+        ],
+        "tahsilat": { "tutar": 200 }
+      }
+    },
+    "POST /fis/{id}/iptal": {
+      "request": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": { "reason": { "type": "string", "minLength": 3 } }
+      },
+      "response": { "type": "object", "properties": { "ok": { "type": "boolean" } } },
+      "example": { "reason": "Yanlış fiyat" }
+    },
+    "POST /fis/{id}/ters": {
+      "request": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": { "reason": { "type": "string", "minLength": 3 } }
+      },
+      "response": { "type": "object", "required": ["reversed_id"], "properties": { "reversed_id": { "type": "string", "format": "uuid" } } },
+      "example": { "reason": "Hatalı cari" }
+    },
+    "POST /kasa/tahsilat": {
+      "request": {
+        "type": "object",
+        "required": ["fis_id","tutar"],
+        "properties": { "fis_id": { "type": "string", "format": "uuid" }, "tutar": { "type": "number", "exclusiveMinimum": 0 } }
+      },
+      "response": { "type": "object", "properties": { "ok": { "type": "boolean" } } }
+    },
+    "POST /kasa/odeme": {
+      "request": {
+        "type": "object",
+        "required": ["fis_id","tutar"],
+        "properties": { "fis_id": { "type": "string", "format": "uuid" }, "tutar": { "type": "number", "exclusiveMinimum": 0 } }
+      },
+      "response": { "type": "object", "properties": { "ok": { "type": "boolean" } } }
+    },
+    "GET /rapor/stok-ozet": {
+      "request": { "type": "object", "properties": { "stok_id": { "type": "string", "format": "uuid" } } },
+      "response": { "type": "array" }
+    },
+    "GET /rapor/cari-bakiye": {
+      "request": { "type": "object", "properties": { "cari_id": { "type": "string", "format": "uuid" } } },
+      "response": { "type": "array" }
+    },
+    "GET /rapor/kasa-gunluk": {
+      "request": { "type": "object", "properties": { "gun": { "type": "string", "format": "date" } } },
+      "response": { "type": "array" }
+    }
+  },
+  "errors": {
+    "TXN_FAILED": "İşlem başarısız",
+    "REVERSE_INVALID_STATE": "ACTIVE olmayan fiş terslenemez",
+    "PERMISSION_DENIED": "Yetki yok",
+    "VALIDATION_ERROR": "Doğrulama hatası"
+  }
+}
