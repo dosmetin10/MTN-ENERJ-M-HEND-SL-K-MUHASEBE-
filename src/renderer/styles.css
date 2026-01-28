@@ -62,7 +62,8 @@ body {
   display: grid;
   place-items: center;
   z-index: 1000;
-  animation: splash-fade 5.4s ease forwards;
+  opacity: 1;
+  animation: splash-fade 3.2s ease forwards;
 }
 
 .splash__content {
@@ -91,14 +92,10 @@ body {
 
 @keyframes splash-fade {
   0% {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  12% {
     opacity: 1;
     transform: scale(1);
   }
-  78% {
+  80% {
     opacity: 1;
     transform: scale(1);
   }
@@ -2431,10 +2428,41 @@ tr.is-cancelled {
   display:flex;
   gap:10px;
   align-items:center;
+  flex-wrap: wrap;
 }
 #customer-list-section .table-actions .search{
   flex:1;
   padding: 11px 14px;
+}
+
+#customer-list-section .table-card,
+#stock-list-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+#customer-table thead th,
+#stock-list-card thead th {
+  background: #f8fafc;
+  color: #0f172a;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 700;
+}
+
+#customer-table tbody tr:nth-child(even),
+#stock-list-card tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+#customer-table tbody tr:hover td,
+#stock-list-card tbody tr:hover td {
+  background: #eef2ff;
+}
+
+#customer-table td,
+#stock-list-card td {
+  border-bottom: 1px solid #e2e8f0;
 }
 
 #customer-table td, #customer-table th{

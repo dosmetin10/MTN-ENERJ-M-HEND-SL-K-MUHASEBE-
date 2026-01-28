@@ -2069,7 +2069,7 @@ const updateReminderUI = () => {
 };
 
 const loginAnimationMs = 350;
-const splashDurationMs = 2600;
+const splashDurationMs = 3200;
 
 const resetLoginFeedback = () => {
   if (loginError) {
@@ -7640,7 +7640,9 @@ function forceKeyboardFocus(panelId) {
     // Görünür paneldeki ilk inputa odaklan
     const panel = document.getElementById(panelId) || document.querySelector(".panel:not(.is-hidden)");
     if (!panel) return;
-    const input = panel.querySelector("input:not([type=hidden]):not([disabled]), textarea:not([disabled]), select:not([disabled])");
+    const input = panel.querySelector(
+      "input:not([type=hidden]):not([disabled]):not([readonly]), textarea:not([disabled]), select:not([disabled])"
+    );
     if (input) {
       input.focus();
       input.select?.();
