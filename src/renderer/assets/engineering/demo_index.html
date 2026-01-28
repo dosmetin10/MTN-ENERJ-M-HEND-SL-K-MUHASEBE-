@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Demo Hesaplama</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; }
+    .demo-section { margin-bottom: 16px; }
+    label { display:block; margin-top: 6px; }
+    input { width: 100%; padding: 4px; margin-top: 4px; }
+  </style>
+<link rel="stylesheet" href="./assets/styles/mtn-theme.css">
+</head>
+<body>
+  <h1>Demo Hesaplama Aracı</h1>
+  <p>Bu demo sayfa çeşitli basit hesaplamaları içerir.</p>
+  <div class="demo-section">
+    <h2>A Alanı Hesabı</h2>
+    <label>
+      Kenar (m)
+      <input type="number" id="kenar" placeholder="Örn. 5" />
+    </label>
+    <button onclick="alanHesapla()">Alan Hesapla</button>
+    <p id="alanSonuc"></p>
+  </div>
+  <div class="demo-section">
+    <h2>B Çevre Hesabı</h2>
+    <label>
+      Yarıçap (m)
+      <input type="number" id="yariçap" placeholder="Örn. 2" />
+    </label>
+    <button onclick="cevreHesapla()">Çevre Hesapla</button>
+    <p id="cevreSonuc"></p>
+  </div>
+  <script>
+    function alanHesapla() {
+      var k = parseFloat(document.getElementById('kenar').value || '0');
+      var alan = k * k;
+      document.getElementById('alanSonuc').textContent = 'Alan: ' + alan.toFixed(2) + ' m²';
+    }
+    function cevreHesapla() {
+      var r = parseFloat(document.getElementById('yariçap').value || '0');
+      var cevre = 2 * Math.PI * r;
+      document.getElementById('cevreSonuc').textContent = 'Çevre: ' + cevre.toFixed(2) + ' m';
+    }
+  </script>
+</body>
+</html>
