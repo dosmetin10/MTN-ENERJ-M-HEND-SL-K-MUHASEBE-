@@ -334,6 +334,8 @@ const stockValuationSelect = document.getElementById("stock-valuation");
 const autoUpdateToggle = document.getElementById("auto-update-enabled");
 const checkUpdatesButton = document.getElementById("check-updates");
 const updateStatusEl = document.getElementById("update-status");
+const tourEnabledToggle = document.getElementById("tour-enabled");
+const tourStatusEl = document.getElementById("tour-status");
 const lastAutoBackupEl = document.getElementById("last-auto-backup");
 const settingsStatusEl = document.getElementById("settings-status");
 const resetDataButton = document.getElementById("reset-data");
@@ -347,6 +349,7 @@ const helpMenuPanel = document.getElementById("help-menu-panel");
 const helpDescribeScreenButton = document.getElementById("help-describe-screen");
 const helpGeneralTourButton = document.getElementById("help-general-tour");
 const helpQuickGuideButton = document.getElementById("help-quick-guide");
+const helpMenuWrap = document.querySelector(".help-menu");
 const periodYearInput = document.getElementById("period-year-input");
 const periodLockToggle = document.getElementById("period-lock-toggle");
 const periodPreviewButton = document.getElementById("period-preview");
@@ -1292,6 +1295,9 @@ const setStatus = (message) => {
 };
 
 const toggleHelpMenu = (open) => {
+  if (currentSettings?.enableTour === false) {
+    return;
+  }
   if (!helpMenuPanel || !helpMenuToggle) {
     return;
   }
@@ -1376,7 +1382,18 @@ const renderTourStep = () => {
 };
 
 const startTour = (pageId) => {
-  tourSteps = getTourSteps(pageId).filter((step) => document.querySelector(step.selector));
+  if (currentSettings?.enableTour === false) {
+    setStatus("Tur özelliği kapalı.");
+    return;
+  }
+  const allSteps = getTourSteps(pageId);
+  const missingSteps = allSteps.filter(
+    (step) => !document.querySelector(step.selector)
+  );
+  tourSteps = allSteps.filter((step) => document.querySelector(step.selector));
+  if (missingSteps.length) {
+    console.warn("Tur adımı atlandı (selector bulunamadı):", missingSteps);
+  }
   tourStepIndex = 0;
   if (!tourSteps.length) {
     setStatus("Bu ekran için tur tanımı bulunamadı.");
@@ -4454,6 +4471,21 @@ const initApp = async () => {
   if (autoUpdateToggle) {
     autoUpdateToggle.checked = settings.autoUpdateEnabled !== false;
   }
+  if (tourEnabledToggle) {
+    tourEnabledToggle.checked = settings.enableTour !== false;
+  }
+  if (helpMenuWrap) {
+    helpMenuWrap.classList.toggle(
+      "is-hidden",
+      settings.enableTour === false
+    );
+  }
+  if (tourStatusEl) {
+    tourStatusEl.textContent =
+      settings.enableTour === false
+        ? "Tur özelliği pasif."
+        : "Tur özelliği aktif.";
+  }
   if (updateStatusEl) {
     updateStatusEl.textContent = settings.autoUpdateLastCheckedAt
       ? `Son kontrol: ${new Date(settings.autoUpdateLastCheckedAt).toLocaleString("tr-TR")}`
@@ -6320,6 +6352,33 @@ if (checkUpdatesButton) {
     currentSettings = nextSettings;
     if (updateStatusEl) {
       updateStatusEl.textContent = `Güncelleme kontrolü tamamlandı. Sürüm: ${window.mtnApp?.version || "0.2.x"}`;
+    }
+  });
+}
+
+if (tourEnabledToggle) {
+  tourEnabledToggle.addEventListener("change", async () => {
+    if (!window.mtnApp?.saveSettings) {
+      if (tourStatusEl) tourStatusEl.textContent = "Tur servisi hazır değil.";
+      return;
+    }
+    const existingSettings = await window.mtnApp.getSettings();
+    const nextSettings = {
+      ...existingSettings,
+      enableTour: tourEnabledToggle.checked
+    };
+    await window.mtnApp.saveSettings(nextSettings);
+    currentSettings = nextSettings;
+    if (helpMenuWrap) {
+      helpMenuWrap.classList.toggle(
+        "is-hidden",
+        nextSettings.enableTour === false
+      );
+    }
+    if (tourStatusEl) {
+      tourStatusEl.textContent = nextSettings.enableTour
+        ? "Tur özelliği aktif."
+        : "Tur özelliği pasif.";
     }
   });
 }
