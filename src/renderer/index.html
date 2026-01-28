@@ -136,7 +136,7 @@
     <div class="splash" id="splash-screen">
       <div class="splash__content">
         <div class="splash__ring"></div>
-        <img class="splash__logo" id="splash-logo" src="assets/logo.svg" alt="MTN logo" />
+        <img class="splash__logo" id="splash-logo" src="assets/brand-placeholder.svg" alt="Firma logosu" />
         <h1>MTN Ön Muhasebe</h1>
         <p>Profesyonel ERP deneyimi hazırlanıyor...</p>
         <div class="splash__loader"><span></span></div>
@@ -223,7 +223,7 @@
       <div class="login__card">
         <div class="login__header">
           <div class="login__brand">
-            <img class="login__logo" id="login-logo" src="assets/logo.svg" alt="Firma logosu" />
+            <img class="login__logo" id="login-logo" src="assets/brand-placeholder.svg" alt="Firma logosu" />
             <div>
               <h1>Giriş</h1>
               <span class="login__demo">Demo: mtn / 1453</span>
@@ -448,6 +448,39 @@
                 <p class="dashboard__subtitle">
                   Güncel finans, stok ve operasyon verilerini tek ekranda yönetin.
                 </p>
+                <section class="executive-summary" aria-label="Yönetici Özeti">
+                  <div class="executive-summary__header">
+                    <div>
+                      <h3>Yönetici Özeti</h3>
+                      <p class="muted">Bugün ve bu ay için anlık görünüm.</p>
+                    </div>
+                    <button class="ghost" type="button" id="summary-refresh">
+                      Verileri Güncelle
+                    </button>
+                  </div>
+                  <div class="executive-summary__grid">
+                    <article class="executive-card">
+                      <span>Günlük Nakit Akış</span>
+                      <strong>₺0,00</strong>
+                      <p>Tahsilat ve ödeme dengesi</p>
+                    </article>
+                    <article class="executive-card">
+                      <span>Vadesi Gelen</span>
+                      <strong>₺0,00</strong>
+                      <p>Bugün kapanması gereken cariler</p>
+                    </article>
+                    <article class="executive-card">
+                      <span>Kritik Stok</span>
+                      <strong>0 Kalem</strong>
+                      <p>Minimum seviyenin altındaki malzemeler</p>
+                    </article>
+                    <article class="executive-card">
+                      <span>Aylık Kârlılık</span>
+                      <strong>₺0,00</strong>
+                      <p>Satış-fatura net görünüm</p>
+                    </article>
+                  </div>
+                </section>
                 <!-- Canlı muhasebe asistanı paneli -->
                 <section class="assistant-live">
                   <div class="assistant-live__header">

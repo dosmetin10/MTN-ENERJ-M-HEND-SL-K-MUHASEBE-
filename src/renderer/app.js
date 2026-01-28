@@ -1577,18 +1577,18 @@ const applyBranding = (settings) => {
       brandLogo.src = settings.logoDataUrl;
       brandLogo.style.display = "block";
     } else {
-      brandLogo.src = "assets/logo.svg";
+      brandLogo.src = "assets/brand-placeholder.svg";
       brandLogo.style.display = "block";
     }
   }
   if (splashLogo) {
-    splashLogo.src = settings.logoDataUrl || "assets/logo.svg";
+    splashLogo.src = settings.logoDataUrl || "assets/brand-placeholder.svg";
   }
   if (loginLogo) {
-    loginLogo.src = settings.logoDataUrl || "assets/logo.svg";
+    loginLogo.src = settings.logoDataUrl || "assets/brand-placeholder.svg";
   }
   if (topbarLogo) {
-    topbarLogo.src = brandLogo?.src || "assets/logo.svg";
+    topbarLogo.src = brandLogo?.src || "assets/brand-placeholder.svg";
     topbarLogo.style.display = "block";
   }
   if (footerCompanyName) {
@@ -1598,7 +1598,7 @@ const applyBranding = (settings) => {
     footerCompanyOwner.textContent = settings.companyOwner || "Metin Döş";
   }
   if (offerLogo) {
-    offerLogo.src = brandLogo?.src || "assets/logo.svg";
+    offerLogo.src = brandLogo?.src || "assets/brand-placeholder.svg";
   }
   if (offerCompanyName) {
     offerCompanyName.textContent = companyName;
@@ -1610,7 +1610,7 @@ const applyBranding = (settings) => {
     offerCompanyAddress.textContent = settings.companyAddress || "";
   }
   if (offerLogoIndustrial) {
-    offerLogoIndustrial.src = brandLogo?.src || "assets/logo.svg";
+    offerLogoIndustrial.src = brandLogo?.src || "assets/brand-placeholder.svg";
   }
   if (offerCompanyNameIndustrial) {
     offerCompanyNameIndustrial.textContent = companyName;
@@ -4335,7 +4335,7 @@ const initApp = async () => {
       logoPreview.src = settings.logoDataUrl;
     }
     if (logoPreview && !settings.logoDataUrl) {
-      logoPreview.src = "assets/logo.svg";
+      logoPreview.src = "assets/brand-placeholder.svg";
     }
     if (firstRunForm) {
       firstRunForm.companyName.value = settings.companyName || "";
@@ -9315,4 +9315,3 @@ async function openCustomerSavedOffers(customerId) {
     mtnShowError('İşlem Hatası', `${msg}\n${stack}`);
   });
 })();
-
