@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Doğalgaz Hesaplama</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; }
+    label { display:block; margin-top: 8px; }
+    input, select { width: 100%; padding: 4px; margin-top: 4px; }
+    button { margin-top: 12px; }
+  </style>
+<link rel="stylesheet" href="./assets/styles/mtn-theme.css">
+</head>
+<body>
+  <h1>Doğalgaz Çap Hesaplama</h1>
+  <p>Bu basit hesap makinesi doğalgaz boru çapını tahmin etmenize yardımcı olur.</p>
+  <label>
+    Debi (m³/h)
+    <input type="number" id="debi" placeholder="Örn. 2.5" />
+  </label>
+  <label>
+    Uzunluk (m)
+    <input type="number" id="uzunluk" placeholder="Örn. 12" />
+  </label>
+  <button onclick="hesapla()">Hesapla</button>
+  <p id="sonuc"></p>
+  <script>
+    function hesapla() {
+      var debi = parseFloat(document.getElementById('debi').value || '0');
+      var uzun = parseFloat(document.getElementById('uzunluk').value || '0');
+      if (debi <= 0 || uzun <= 0) {
+        document.getElementById('sonuc').textContent = 'Lütfen geçerli debi ve uzunluk girin.';
+        return;
+      }
+      // Çok basit çap tahmini: 0.5 * debi + 0.1 * uzun
+      var cap = 0.5 * debi + 0.1 * uzun;
+      document.getElementById('sonuc').textContent = 'Tahmini çap: ' + cap.toFixed(2) + ' cm';
+    }
+  </script>
+</body>
+</html>
