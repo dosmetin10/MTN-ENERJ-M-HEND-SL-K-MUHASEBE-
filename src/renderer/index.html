@@ -136,7 +136,7 @@
     <div class="splash" id="splash-screen">
       <div class="splash__content">
         <div class="splash__ring"></div>
-        <img class="splash__logo" id="splash-logo" src="assets/logo.svg" alt="MTN logo" />
+        <img class="splash__logo" id="splash-logo" src="assets/brand-placeholder.svg" alt="Firma logosu" />
         <h1>MTN Ön Muhasebe</h1>
         <p>Profesyonel ERP deneyimi hazırlanıyor...</p>
         <div class="splash__loader"><span></span></div>
@@ -223,7 +223,7 @@
       <div class="login__card">
         <div class="login__header">
           <div class="login__brand">
-            <img class="login__logo" id="login-logo" src="assets/logo.svg" alt="Firma logosu" />
+            <img class="login__logo" id="login-logo" src="assets/brand-placeholder.svg" alt="Firma logosu" />
             <div>
               <h1>Giriş</h1>
               <span class="login__demo">Demo: mtn / 1453</span>
@@ -431,6 +431,16 @@
           <div class="topbar__actions">
             <div class="status-pill" id="global-status" aria-live="polite"></div>
             <button class="ghost topbar__sound" id="toggle-sound" type="button">Ses: Açık</button>
+            <div class="help-menu">
+              <button class="ghost topbar__help" id="help-menu-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+                ❓ Yardım
+              </button>
+              <div class="help-menu__panel" id="help-menu-panel" role="menu">
+                <button class="help-menu__item" id="help-describe-screen" role="menuitem">Bu ekranı anlat</button>
+                <button class="help-menu__item" id="help-general-tour" role="menuitem">Genel tur</button>
+                <button class="help-menu__item" id="help-quick-guide" role="menuitem">Kısa kılavuz</button>
+              </div>
+            </div>
             <div class="ghost topbar__clock" id="topbar-clock" aria-label="Saat"></div>
             <button class="topbar__exit" id="exit-app" aria-label="Çıkış">
               ✕
@@ -448,6 +458,39 @@
                 <p class="dashboard__subtitle">
                   Güncel finans, stok ve operasyon verilerini tek ekranda yönetin.
                 </p>
+                <section class="executive-summary" aria-label="Yönetici Özeti">
+                  <div class="executive-summary__header">
+                    <div>
+                      <h3>Yönetici Özeti</h3>
+                      <p class="muted">Bugün ve bu ay için anlık görünüm.</p>
+                    </div>
+                    <button class="ghost" type="button" id="summary-refresh">
+                      Verileri Güncelle
+                    </button>
+                  </div>
+                  <div class="executive-summary__grid">
+                    <article class="executive-card">
+                      <span>Günlük Nakit Akış</span>
+                      <strong>₺0,00</strong>
+                      <p>Tahsilat ve ödeme dengesi</p>
+                    </article>
+                    <article class="executive-card">
+                      <span>Vadesi Gelen</span>
+                      <strong>₺0,00</strong>
+                      <p>Bugün kapanması gereken cariler</p>
+                    </article>
+                    <article class="executive-card">
+                      <span>Kritik Stok</span>
+                      <strong>0 Kalem</strong>
+                      <p>Minimum seviyenin altındaki malzemeler</p>
+                    </article>
+                    <article class="executive-card">
+                      <span>Aylık Kârlılık</span>
+                      <strong>₺0,00</strong>
+                      <p>Satış-fatura net görünüm</p>
+                    </article>
+                  </div>
+                </section>
                 <!-- Canlı muhasebe asistanı paneli -->
                 <section class="assistant-live">
                   <div class="assistant-live__header">
@@ -567,6 +610,12 @@
                 <div class="chip-group chip-group--filters" id="customer-filters">
                   <button class="chip chip--active" data-customer-filter="all">
                     Hepsi <span class="chip__count" id="customer-filter-all-count">0</span>
+                  </button>
+                  <button class="chip" data-customer-filter="active">
+                    Aktif <span class="chip__count" id="customer-filter-active-count">0</span>
+                  </button>
+                  <button class="chip" data-customer-filter="inactive">
+                    Pasif <span class="chip__count" id="customer-filter-inactive-count">0</span>
                   </button>
                   <button class="chip" data-customer-filter="debtors">
                     Borçlular <span class="chip__count" id="customer-filter-debtors-count">0</span>
@@ -1354,7 +1403,18 @@
                 <div class="table-actions">
                   <input id="stock-list-search" class="search" placeholder="Stok adı / kodu / Q-DN ara..." />
                   <button class="ghost" id="stock-list-search-btn">Ara</button>
+                  <button class="ghost" id="stock-list-new">Yeni Malzeme</button>
                   <button class="primary" id="stock-list-add-to-sale">Toplu Satışa Aktar</button>
+                </div>
+                <div class="filter-bar">
+                  <label>
+                    Birim
+                    <input id="stock-list-unit-filter" placeholder="Adet / m / kg" />
+                  </label>
+                  <label>
+                    Depo
+                    <input id="stock-list-warehouse-filter" placeholder="Ana Depo" />
+                  </label>
                 </div>
                 <p class="search-hint" id="stock-list-empty"></p>
                 <div class="table-card table-card--sheet">
@@ -2104,6 +2164,31 @@
                 </form>
                 <p class="report-path" id="theme-status"></p>
               </div>
+              <div class="table-card update-settings">
+                <h3>Otomatik Güncelleme</h3>
+                <p class="muted">Uygulama açılışında ve günde 1 kez güncelleme kontrolü yapılır.</p>
+                <div class="form-inline">
+                  <label class="checkbox inline">
+                    <input type="checkbox" id="auto-update-enabled" />
+                    Güncelleme kontrolü aktif
+                  </label>
+                  <button class="ghost" id="check-updates">Güncellemeleri Kontrol Et</button>
+                </div>
+                <p class="report-path" id="update-status"></p>
+              </div>
+              <div class="table-card help-settings">
+                <h3>Yardım &amp; Tur</h3>
+                <p class="muted">
+                  “Bu ekranı anlat” turunu açıp kapatabilirsiniz. Kapalıysa yardım menüsü gizlenir.
+                </p>
+                <div class="form-inline">
+                  <label class="checkbox inline">
+                    <input type="checkbox" id="tour-enabled" />
+                    Tur özelliği aktif
+                  </label>
+                </div>
+                <p class="report-path" id="tour-status"></p>
+              </div>
               <div class="table-card user-management">
                 <h3>Kullanıcı Yönetimi</h3>
                 <p class="muted">
@@ -2144,6 +2229,26 @@
                   <button class="primary" type="submit">Kullanıcı Ekle</button>
                 </form>
                 <p class="report-path" id="user-form-error"></p>
+              </div>
+              <div class="table-card year-end-management">
+                <h3>Yıl Sonu Devri</h3>
+                <p class="muted">
+                  Seçilen dönemin kapanışını simüle edin, devir kaydı oluşturun ve gerekirse geri alın.
+                </p>
+                <div class="form-inline">
+                  <input id="period-year-input" type="number" min="2000" max="2100" placeholder="2026" />
+                  <label class="checkbox inline">
+                    <input type="checkbox" id="period-lock-toggle" />
+                    Eski yılı kilitle
+                  </label>
+                </div>
+                <div class="year-end-actions">
+                  <button class="ghost" id="period-preview">Simülasyon</button>
+                  <button class="primary" id="period-close">Deviri Uygula</button>
+                  <button class="danger" id="period-rollback">Deviri Geri Al</button>
+                </div>
+                <div class="year-end-preview" id="period-preview-output"></div>
+                <div class="year-end-log" id="period-log"></div>
               </div>
 
               <div class="table-card security-management">
@@ -2251,9 +2356,127 @@
           / <span id="footer-company-owner">Metin Döş</span> tarafından kodlanmış
           ve tasarlanmıştır. © Tüm hakları saklıdır.
         </footer>
-        <button class="assistant-fab">YZ Asistan (F1)</button>
+        <section class="assistant-dock" id="assistant-dock" aria-label="Canlı Asistan">
+          <div class="assistant-dock__header">
+            <strong>Canlı Asistan</strong>
+            <button class="ghost assistant-dock__close" id="assistant-dock-close" aria-label="Asistanı kapat">✕</button>
+          </div>
+          <div class="assistant-dock__tabs" role="tablist">
+            <button class="assistant-dock__tab is-active" data-assistant-tab="today" role="tab">Bugün</button>
+            <button class="assistant-dock__tab" data-assistant-tab="tasks" role="tab">Görevler</button>
+            <button class="assistant-dock__tab" data-assistant-tab="ask" role="tab">Soru Sor</button>
+          </div>
+          <div class="assistant-dock__panes">
+            <div class="assistant-dock__pane is-active" data-assistant-pane="today">
+              <ul id="assistant-dock-daily"></ul>
+            </div>
+            <div class="assistant-dock__pane" data-assistant-pane="tasks">
+              <ul id="assistant-dock-reminders"></ul>
+            </div>
+            <div class="assistant-dock__pane" data-assistant-pane="ask">
+              <div class="assistant-dock__ask">
+                <input id="assistant-dock-input" placeholder="Örn: eksik firma bilgisi" />
+                <button class="primary" id="assistant-dock-send">Gönder</button>
+              </div>
+              <div class="assistant-dock__log" id="assistant-dock-log"></div>
+            </div>
+          </div>
+        </section>
+        <button class="assistant-fab" id="assistant-fab">YZ Asistan (F1)</button>
       </main>
     </div>
+
+    <section class="onboarding" id="onboarding-wizard" aria-hidden="true">
+      <div class="onboarding__card">
+        <div class="onboarding__header">
+          <h2>İlk Kurulum Sihirbazı</h2>
+          <p class="muted">Kurumsal MTN ERP kurulumunu tamamlayın.</p>
+        </div>
+        <div class="onboarding__steps">
+          <div class="onboarding__step" data-step="1">
+            <h3>Hoş Geldiniz</h3>
+            <p>Bu sihirbaz MTN ERP'yi kurumsal kullanım için hazırlar.</p>
+          </div>
+          <div class="onboarding__step" data-step="2">
+            <h3>Firma Bilgileri</h3>
+            <div class="form-grid">
+              <label>Ünvan <input id="onboard-company-name" /></label>
+              <label>Vergi No <input id="onboard-tax-number" /></label>
+              <label>Telefon <input id="onboard-company-phone" /></label>
+              <label class="full-width">Adres <input id="onboard-company-address" /></label>
+              <label class="full-width">Logo <input id="onboard-company-logo" type="file" accept="image/*" /></label>
+            </div>
+          </div>
+          <div class="onboarding__step" data-step="3">
+            <h3>Dönem Seçimi</h3>
+            <div class="form-grid">
+              <label>Dönem Yılı <input id="onboard-period-year" type="number" min="2000" max="2100" /></label>
+              <label class="checkbox inline">
+                <input id="onboard-has-carryover" type="checkbox" />
+                Önceki yıldan devir yapılacak
+              </label>
+            </div>
+          </div>
+          <div class="onboarding__step" data-step="4">
+            <h3>Yönetici Kullanıcı</h3>
+            <div class="form-grid">
+              <label>Ad Soyad <input id="onboard-admin-name" /></label>
+              <label>Kullanıcı Adı <input id="onboard-admin-username" /></label>
+              <label>Şifre <input id="onboard-admin-password" type="password" /></label>
+            </div>
+          </div>
+          <div class="onboarding__step" data-step="5">
+            <h3>Yedekleme</h3>
+            <div class="form-grid">
+              <label>Yerel Yedek Klasörü <input id="onboard-backup-folder" placeholder="D:\\MTN_YEDEK" /></label>
+              <label>Otomatik Yedek (Günlük)
+                <select id="onboard-auto-backup">
+                  <option value="true">Açık</option>
+                  <option value="false">Kapalı</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="onboarding__step" data-step="6">
+            <h3>Bitir</h3>
+            <p>Kontroller tamamlandı. Kaydet ve başla.</p>
+            <div class="onboarding__checks" id="onboard-checks"></div>
+          </div>
+        </div>
+        <div class="onboarding__footer">
+          <button class="ghost" id="onboarding-skip">Sonra Tamamla</button>
+          <div class="onboarding__nav">
+            <button class="ghost" id="onboarding-back">Geri</button>
+            <button class="primary" id="onboarding-next">İleri</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tour-overlay" id="tour-overlay" aria-hidden="true">
+      <div class="tour-overlay__backdrop"></div>
+      <div class="tour-overlay__card" id="tour-card">
+        <h3 id="tour-title">Tur</h3>
+        <p id="tour-description"></p>
+        <div class="tour-overlay__actions">
+          <button class="ghost" id="tour-back">Geri</button>
+          <button class="ghost" id="tour-skip">Kapat</button>
+          <button class="primary" id="tour-next">İleri</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-guide" id="quick-guide" aria-hidden="true">
+      <div class="quick-guide__card">
+        <h3>Kısa Kılavuz</h3>
+        <ul>
+          <li>Cari ve Stok ekranlarında filtreyi kullanın, tablo alanı kaydırılabilir.</li>
+          <li>Sağ alttaki asistan paneli kritik uyarıları gösterir.</li>
+          <li>Yedekleme ayarlarını her ay kontrol edin.</li>
+        </ul>
+        <button class="primary" id="quick-guide-close">Kapat</button>
+      </div>
+    </section>
 
     
     <script src="./mtn/mtn_toast.js"></script>
@@ -2264,6 +2487,7 @@
     <script src="./mtn/mtn_rules.js"></script>
     <script src="./mtn/mtn_nav.js"></script>
     <script src="./mtn/mtn_assistant.js"></script>
+    <script src="./tour-config.js"></script>
 
     <script src="app.js"></script>
   

@@ -141,6 +141,12 @@ const customerFilterButtons = document.querySelectorAll(
 const customerFilterAllCount = document.getElementById(
   "customer-filter-all-count"
 );
+const customerFilterActiveCount = document.getElementById(
+  "customer-filter-active-count"
+);
+const customerFilterInactiveCount = document.getElementById(
+  "customer-filter-inactive-count"
+);
 const customerFilterDebtorsCount = document.getElementById(
   "customer-filter-debtors-count"
 );
@@ -248,6 +254,11 @@ const receiptFilterStatusSelect = document.getElementById(
 );
 const stockListSearchInput = document.getElementById("stock-list-search");
 const stockListSearchButton = document.getElementById("stock-list-search-btn");
+const stockListNewButton = document.getElementById("stock-list-new");
+const stockListUnitFilter = document.getElementById("stock-list-unit-filter");
+const stockListWarehouseFilter = document.getElementById(
+  "stock-list-warehouse-filter"
+);
 const stockListAddToSaleButton = document.getElementById(
   "stock-list-add-to-sale"
 );
@@ -294,6 +305,16 @@ const assistantRemindersEl = document.getElementById("assistant-reminders");
 const assistantSuggestionsEl = document.getElementById("assistant-suggestions");
 const assistantRefreshButton = document.getElementById("assistant-refresh");
 const assistantStatusEl = document.getElementById("assistant-status");
+const assistantDock = document.getElementById("assistant-dock");
+const assistantDockClose = document.getElementById("assistant-dock-close");
+const assistantDockTabs = document.querySelectorAll("[data-assistant-tab]");
+const assistantDockPanes = document.querySelectorAll("[data-assistant-pane]");
+const assistantDockDailyEl = document.getElementById("assistant-dock-daily");
+const assistantDockRemindersEl = document.getElementById("assistant-dock-reminders");
+const assistantDockInput = document.getElementById("assistant-dock-input");
+const assistantDockSend = document.getElementById("assistant-dock-send");
+const assistantDockLog = document.getElementById("assistant-dock-log");
+const assistantFab = document.getElementById("assistant-fab");
 const detailCustomerSelect = document.getElementById("detail-customer");
 const detailTable = document.getElementById("detail-table");
 const detailReportButton = document.getElementById("detail-report");
@@ -321,6 +342,11 @@ const cloudBackupPathInput = document.getElementById("cloud-backup-path");
 const cloudBackupEnabledSelect = document.getElementById("cloud-backup-enabled");
 const autoBackupEnabledSelect = document.getElementById("auto-backup-enabled");
 const stockValuationSelect = document.getElementById("stock-valuation");
+const autoUpdateToggle = document.getElementById("auto-update-enabled");
+const checkUpdatesButton = document.getElementById("check-updates");
+const updateStatusEl = document.getElementById("update-status");
+const tourEnabledToggle = document.getElementById("tour-enabled");
+const tourStatusEl = document.getElementById("tour-status");
 const lastAutoBackupEl = document.getElementById("last-auto-backup");
 const settingsStatusEl = document.getElementById("settings-status");
 const resetDataButton = document.getElementById("reset-data");
@@ -329,6 +355,45 @@ const userForm = document.getElementById("user-form");
 const userFormError = document.getElementById("user-form-error");
 const firstRunScreen = document.getElementById("first-run-screen");
 const firstRunForm = document.getElementById("first-run-form");
+const helpMenuToggle = document.getElementById("help-menu-toggle");
+const helpMenuPanel = document.getElementById("help-menu-panel");
+const helpDescribeScreenButton = document.getElementById("help-describe-screen");
+const helpGeneralTourButton = document.getElementById("help-general-tour");
+const helpQuickGuideButton = document.getElementById("help-quick-guide");
+const helpMenuWrap = document.querySelector(".help-menu");
+const periodYearInput = document.getElementById("period-year-input");
+const periodLockToggle = document.getElementById("period-lock-toggle");
+const periodPreviewButton = document.getElementById("period-preview");
+const periodCloseButton = document.getElementById("period-close");
+const periodRollbackButton = document.getElementById("period-rollback");
+const periodPreviewOutput = document.getElementById("period-preview-output");
+const periodLog = document.getElementById("period-log");
+const onboardingWizard = document.getElementById("onboarding-wizard");
+const onboardingSteps = document.querySelectorAll(".onboarding__step");
+const onboardingNext = document.getElementById("onboarding-next");
+const onboardingBack = document.getElementById("onboarding-back");
+const onboardingSkip = document.getElementById("onboarding-skip");
+const onboardingChecks = document.getElementById("onboard-checks");
+const onboardingCompanyName = document.getElementById("onboard-company-name");
+const onboardingTaxNumber = document.getElementById("onboard-tax-number");
+const onboardingCompanyPhone = document.getElementById("onboard-company-phone");
+const onboardingCompanyAddress = document.getElementById("onboard-company-address");
+const onboardingCompanyLogo = document.getElementById("onboard-company-logo");
+const onboardingPeriodYear = document.getElementById("onboard-period-year");
+const onboardingHasCarryover = document.getElementById("onboard-has-carryover");
+const onboardingAdminName = document.getElementById("onboard-admin-name");
+const onboardingAdminUsername = document.getElementById("onboard-admin-username");
+const onboardingAdminPassword = document.getElementById("onboard-admin-password");
+const onboardingBackupFolder = document.getElementById("onboard-backup-folder");
+const onboardingAutoBackup = document.getElementById("onboard-auto-backup");
+const tourOverlay = document.getElementById("tour-overlay");
+const tourTitle = document.getElementById("tour-title");
+const tourDescription = document.getElementById("tour-description");
+const tourBack = document.getElementById("tour-back");
+const tourNext = document.getElementById("tour-next");
+const tourSkip = document.getElementById("tour-skip");
+const quickGuide = document.getElementById("quick-guide");
+const quickGuideClose = document.getElementById("quick-guide-close");
 const logoFileInput = document.getElementById("logo-file");
 const logoPreview = document.getElementById("logo-preview");
 const brandTitle = document.getElementById("brand-title");
@@ -1240,6 +1305,114 @@ const setStatus = (message) => {
   }, 4500);
 };
 
+const toggleHelpMenu = (open) => {
+  if (currentSettings?.enableTour === false) {
+    return;
+  }
+  if (!helpMenuPanel || !helpMenuToggle) {
+    return;
+  }
+  const nextState = typeof open === "boolean" ? open : !helpMenuPanel.classList.contains("is-open");
+  helpMenuPanel.classList.toggle("is-open", nextState);
+  helpMenuToggle.setAttribute("aria-expanded", String(nextState));
+};
+
+const setAssistantDockTab = (tabId) => {
+  assistantDockTabs.forEach((tab) => {
+    tab.classList.toggle("is-active", tab.dataset.assistantTab === tabId);
+  });
+  assistantDockPanes.forEach((pane) => {
+    pane.classList.toggle("is-active", pane.dataset.assistantPane === tabId);
+  });
+};
+
+const appendAssistantDockLog = (text) => {
+  if (!assistantDockLog) return;
+  const entry = document.createElement("div");
+  entry.textContent = text;
+  assistantDockLog.appendChild(entry);
+};
+
+const openAssistantDock = (open = true) => {
+  if (!assistantDock) return;
+  assistantDock.classList.toggle("is-open", open);
+};
+
+let onboardingStepIndex = 1;
+const renderOnboardingStep = (step) => {
+  onboardingSteps.forEach((panel) => {
+    const isActive = Number(panel.dataset.step) === step;
+    panel.classList.toggle("is-active", isActive);
+  });
+  if (onboardingBack) {
+    onboardingBack.disabled = step <= 1;
+  }
+  if (onboardingNext) {
+    onboardingNext.textContent = step >= onboardingSteps.length ? "Bitir" : "İleri";
+  }
+};
+
+const openOnboardingWizard = (step = 1) => {
+  if (!onboardingWizard) return;
+  onboardingStepIndex = step;
+  onboardingWizard.classList.add("is-visible");
+  onboardingWizard.setAttribute("aria-hidden", "false");
+  renderOnboardingStep(onboardingStepIndex);
+};
+
+const closeOnboardingWizard = () => {
+  if (!onboardingWizard) return;
+  onboardingWizard.classList.remove("is-visible");
+  onboardingWizard.setAttribute("aria-hidden", "true");
+};
+
+const getTourSteps = (pageId) => {
+  const config = window.MTN_TOUR_CONFIG || {};
+  if (pageId && config[pageId]) {
+    return config[pageId];
+  }
+  return config.general || [];
+};
+
+let tourSteps = [];
+let tourStepIndex = 0;
+const renderTourStep = () => {
+  if (!tourOverlay || !tourTitle || !tourDescription) return;
+  const step = tourSteps[tourStepIndex];
+  if (!step) {
+    tourOverlay.classList.remove("is-visible");
+    tourOverlay.setAttribute("aria-hidden", "true");
+    return;
+  }
+  tourTitle.textContent = step.title || "Tur";
+  tourDescription.textContent = step.description || "";
+  tourOverlay.classList.add("is-visible");
+  tourOverlay.setAttribute("aria-hidden", "false");
+  if (tourBack) tourBack.disabled = tourStepIndex === 0;
+  if (tourNext) tourNext.textContent = tourStepIndex === tourSteps.length - 1 ? "Bitir" : "İleri";
+};
+
+const startTour = (pageId) => {
+  if (currentSettings?.enableTour === false) {
+    setStatus("Tur özelliği kapalı.");
+    return;
+  }
+  const allSteps = getTourSteps(pageId);
+  const missingSteps = allSteps.filter(
+    (step) => !document.querySelector(step.selector)
+  );
+  tourSteps = allSteps.filter((step) => document.querySelector(step.selector));
+  if (missingSteps.length) {
+    console.warn("Tur adımı atlandı (selector bulunamadı):", missingSteps);
+  }
+  tourStepIndex = 0;
+  if (!tourSteps.length) {
+    setStatus("Bu ekran için tur tanımı bulunamadı.");
+    return;
+  }
+  renderTourStep();
+};
+
 
 // MTN_KPI_RENDER
 const renderKpis = (data) => {
@@ -1577,18 +1750,18 @@ const applyBranding = (settings) => {
       brandLogo.src = settings.logoDataUrl;
       brandLogo.style.display = "block";
     } else {
-      brandLogo.src = "assets/logo.svg";
+      brandLogo.src = "assets/brand-placeholder.svg";
       brandLogo.style.display = "block";
     }
   }
   if (splashLogo) {
-    splashLogo.src = settings.logoDataUrl || "assets/logo.svg";
+    splashLogo.src = settings.logoDataUrl || "assets/brand-placeholder.svg";
   }
   if (loginLogo) {
-    loginLogo.src = settings.logoDataUrl || "assets/logo.svg";
+    loginLogo.src = settings.logoDataUrl || "assets/brand-placeholder.svg";
   }
   if (topbarLogo) {
-    topbarLogo.src = brandLogo?.src || "assets/logo.svg";
+    topbarLogo.src = brandLogo?.src || "assets/brand-placeholder.svg";
     topbarLogo.style.display = "block";
   }
   if (footerCompanyName) {
@@ -1598,7 +1771,7 @@ const applyBranding = (settings) => {
     footerCompanyOwner.textContent = settings.companyOwner || "Metin Döş";
   }
   if (offerLogo) {
-    offerLogo.src = brandLogo?.src || "assets/logo.svg";
+    offerLogo.src = brandLogo?.src || "assets/brand-placeholder.svg";
   }
   if (offerCompanyName) {
     offerCompanyName.textContent = companyName;
@@ -1610,7 +1783,7 @@ const applyBranding = (settings) => {
     offerCompanyAddress.textContent = settings.companyAddress || "";
   }
   if (offerLogoIndustrial) {
-    offerLogoIndustrial.src = brandLogo?.src || "assets/logo.svg";
+    offerLogoIndustrial.src = brandLogo?.src || "assets/brand-placeholder.svg";
   }
   if (offerCompanyNameIndustrial) {
     offerCompanyNameIndustrial.textContent = companyName;
@@ -1924,7 +2097,7 @@ const updateReminderUI = () => {
 };
 
 const loginAnimationMs = 350;
-const splashDurationMs = 2600;
+const splashDurationMs = 3200;
 
 const resetLoginFeedback = () => {
   if (loginError) {
@@ -2449,6 +2622,12 @@ const renderCustomers = (items) => {
   if (activeCustomerFilter === "creditors") {
     filtered = filtered.filter((item) => Number(item.balance || 0) < 0);
   }
+  if (activeCustomerFilter === "active") {
+    filtered = filtered.filter((item) => item.isActive !== false);
+  }
+  if (activeCustomerFilter === "inactive") {
+    filtered = filtered.filter((item) => item.isActive === false);
+  }
   if (activeCustomerFilter === "due") {
     const now = Date.now();
     const horizon = now + 7 * DAYS_IN_MS;
@@ -2464,6 +2643,16 @@ const renderCustomers = (items) => {
   }
   if (customerFilterAllCount) {
     customerFilterAllCount.textContent = items.length;
+  }
+  if (customerFilterActiveCount) {
+    customerFilterActiveCount.textContent = items.filter(
+      (item) => item.isActive !== false
+    ).length;
+  }
+  if (customerFilterInactiveCount) {
+    customerFilterInactiveCount.textContent = items.filter(
+      (item) => item.isActive === false
+    ).length;
   }
   if (customerFilterDebtorsCount) {
     customerFilterDebtorsCount.textContent = items.filter(
@@ -3010,6 +3199,8 @@ const renderStockList = (items) => {
   }
   stockListTable.innerHTML = "";
   const searchTerm = normalizeText(stockListSearchInput?.value);
+  const unitTerm = normalizeText(stockListUnitFilter?.value);
+  const warehouseTerm = normalizeText(stockListWarehouseFilter?.value);
   const filtered = searchTerm
     ? items.filter((item) => {
         const name = normalizeText(item.name);
@@ -3022,7 +3213,14 @@ const renderStockList = (items) => {
         );
       })
     : items;
-  filtered.forEach((item) => {
+  const refined = filtered.filter((item) => {
+    const unit = normalizeText(item.unit);
+    const warehouse = normalizeText(item.warehouse);
+    const unitOk = unitTerm ? unit.includes(unitTerm) : true;
+    const warehouseOk = warehouseTerm ? warehouse.includes(warehouseTerm) : true;
+    return unitOk && warehouseOk;
+  });
+  refined.forEach((item) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><input type="checkbox" data-stock-id="${item.id || ""}" /></td>
@@ -3041,8 +3239,9 @@ const renderStockList = (items) => {
     stockListTable.appendChild(row);
   });
   if (stockListEmptyEl) {
+    const hasFilters = Boolean(searchTerm || unitTerm || warehouseTerm);
     stockListEmptyEl.textContent =
-      searchTerm && !filtered.length
+      hasFilters && !refined.length
         ? "Aradığınız kriterlere uygun stok bulunamadı."
         : "";
   }
@@ -4127,6 +4326,8 @@ const renderAssistant = (data) => {
   renderAssistantList(assistantDailyEl, daily);
   renderAssistantList(assistantRemindersEl, reminders);
   renderAssistantList(assistantSuggestionsEl, suggestions);
+  renderAssistantList(assistantDockDailyEl, daily);
+  renderAssistantList(assistantDockRemindersEl, reminders);
 
   if (assistantStatusEl) {
     assistantStatusEl.textContent = `Son güncelleme: ${new Date().toLocaleString(
@@ -4304,6 +4505,32 @@ const initApp = async () => {
   if (stockValuationSelect) {
     stockValuationSelect.value = settings.stockValuationMethod || "ortalama";
   }
+  if (autoUpdateToggle) {
+    autoUpdateToggle.checked = settings.autoUpdateEnabled !== false;
+  }
+  if (tourEnabledToggle) {
+    tourEnabledToggle.checked = settings.enableTour !== false;
+  }
+  if (helpMenuWrap) {
+    helpMenuWrap.classList.toggle(
+      "is-hidden",
+      settings.enableTour === false
+    );
+  }
+  if (tourStatusEl) {
+    tourStatusEl.textContent =
+      settings.enableTour === false
+        ? "Tur özelliği pasif."
+        : "Tur özelliği aktif.";
+  }
+  if (updateStatusEl) {
+    updateStatusEl.textContent = settings.autoUpdateLastCheckedAt
+      ? `Son kontrol: ${new Date(settings.autoUpdateLastCheckedAt).toLocaleString("tr-TR")}`
+      : "Henüz kontrol edilmedi.";
+  }
+  if (periodYearInput) {
+    periodYearInput.value = settings.currentPeriodYear || new Date().getFullYear();
+  }
   if (lastAutoBackupEl) {
     lastAutoBackupEl.textContent = settings.lastAutoBackupAt
       ? new Date(settings.lastAutoBackupAt).toLocaleString("tr-TR")
@@ -4327,27 +4554,18 @@ const initApp = async () => {
   setAutoCodes();
   setCustomerWorkspace("list");
 
-  if (!settings.hasOnboarded && firstRunScreen) {
-    firstRunScreen.classList.remove("first-run--hidden");
+  if (!settings.hasOnboarded && onboardingWizard) {
+    firstRunScreen?.classList.add("first-run--hidden");
     loginScreen.style.display = "none";
     loginScreen.classList.remove("login--ready", "login--leaving");
-    if (logoPreview && settings.logoDataUrl) {
-      logoPreview.src = settings.logoDataUrl;
-    }
-    if (logoPreview && !settings.logoDataUrl) {
-      logoPreview.src = "assets/logo.svg";
-    }
-    if (firstRunForm) {
-      firstRunForm.companyName.value = settings.companyName || "";
-      firstRunForm.companyOwner.value = settings.companyOwner || "";
-      firstRunForm.companyPhone.value = settings.companyPhone || "";
-      firstRunForm.companyIban.value = settings.companyIban || "";
-      firstRunForm.companyBank.value = settings.companyBank || "";
-      firstRunForm.companyAddress.value = settings.companyAddress || "";
-      firstRunForm.taxOffice.value = settings.taxOffice || "";
-      firstRunForm.taxNumber.value = settings.taxNumber || "";
-      firstRunForm.defaultCashName.value = settings.defaultCashName || "";
-    }
+    if (onboardingCompanyName) onboardingCompanyName.value = settings.companyName || "";
+    if (onboardingCompanyPhone) onboardingCompanyPhone.value = settings.companyPhone || "";
+    if (onboardingCompanyAddress) onboardingCompanyAddress.value = settings.companyAddress || "";
+    if (onboardingTaxNumber) onboardingTaxNumber.value = settings.taxNumber || "";
+    if (onboardingPeriodYear) onboardingPeriodYear.value = settings.currentPeriodYear || new Date().getFullYear();
+    if (onboardingAutoBackup) onboardingAutoBackup.value = String(settings.enableAutoBackup ?? true);
+    if (onboardingBackupFolder) onboardingBackupFolder.value = settings.backupFolder || "";
+    openOnboardingWizard(settings.onboardingStep || 1);
   }
 };
 
@@ -4695,6 +4913,25 @@ const buildCustomerJobsInvoiceHtml = (customerName, jobs, totals) => {
   `;
 };
 
+const handleReportResult = (result, statusEl, label = "Rapor") => {
+  if (!result) {
+    return false;
+  }
+  if (result.error) {
+    const message = `${label} oluşturulamadı.`;
+    if (statusEl) {
+      statusEl.textContent = message;
+    }
+    setStatus(message);
+    console.error("PDF oluşturma hatası:", result.error);
+    return false;
+  }
+  if (statusEl && result.reportFile) {
+    statusEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
+  }
+  return true;
+};
+
 const generateReport = async (type) => {
   if (!window.mtnApp?.getData || !window.mtnApp?.generateReport) {
     reportPathEl.textContent = "Rapor servisi hazır değil.";
@@ -4798,8 +5035,10 @@ const generateReport = async (type) => {
       type === "customers" || type === "cash" || type === "customer-balance"
   });
   const result = await window.mtnApp.generateReport({ title, html });
-  reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
-  await window.mtnApp?.openFile?.(result.reportFile);
+  const ok = handleReportResult(result, reportPathEl, title);
+  if (ok) {
+    await window.mtnApp?.openFile?.(result.reportFile);
+  }
 };
 
 if (customerForm) {
@@ -5936,6 +6175,24 @@ if (stockListSearchButton) {
   });
 }
 
+if (stockListUnitFilter) {
+  stockListUnitFilter.addEventListener("input", handleStockListSearch);
+}
+
+if (stockListWarehouseFilter) {
+  stockListWarehouseFilter.addEventListener("input", handleStockListSearch);
+}
+
+if (stockListNewButton) {
+  stockListNewButton.addEventListener("click", () => {
+    showPanel("stocks-panel", panelTitles["stocks-panel"]);
+    activateMenuByPanel("stocks-panel");
+    try {
+      stockForm?.elements?.name?.focus?.();
+    } catch (_) {}
+  });
+}
+
 if (stockColumnToggles.length) {
   stockColumnToggles.forEach((toggle) => {
     toggle.addEventListener("change", applyStockColumnVisibility);
@@ -6143,13 +6400,62 @@ if (settingsForm) {
       enableAutoSync: autoSyncEnabledSelect?.value === "true",
       enableCloudBackup: cloudBackupEnabledSelect?.value === "true",
       enableAutoBackup: autoBackupEnabledSelect?.value === "true",
-      stockValuationMethod: stockValuationSelect?.value || "ortalama"
+      stockValuationMethod: stockValuationSelect?.value || "ortalama",
+      autoUpdateEnabled: autoUpdateToggle?.checked ?? true
     };
     const existingSettings = await window.mtnApp.getSettings();
     const nextSettings = { ...existingSettings, ...payload };
     await window.mtnApp.saveSettings(nextSettings);
     currentSettings = nextSettings;
     settingsStatusEl.textContent = "Ayarlar kaydedildi.";
+  });
+}
+
+if (checkUpdatesButton) {
+  checkUpdatesButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    if (!window.mtnApp?.saveSettings) {
+      if (updateStatusEl) updateStatusEl.textContent = "Güncelleme servisi hazır değil.";
+      return;
+    }
+    const now = new Date();
+    const existingSettings = await window.mtnApp.getSettings();
+    const nextSettings = {
+      ...existingSettings,
+      autoUpdateLastCheckedAt: now.toISOString()
+    };
+    await window.mtnApp.saveSettings(nextSettings);
+    currentSettings = nextSettings;
+    if (updateStatusEl) {
+      updateStatusEl.textContent = `Güncelleme kontrolü tamamlandı. Sürüm: ${window.mtnApp?.version || "0.2.x"}`;
+    }
+  });
+}
+
+if (tourEnabledToggle) {
+  tourEnabledToggle.addEventListener("change", async () => {
+    if (!window.mtnApp?.saveSettings) {
+      if (tourStatusEl) tourStatusEl.textContent = "Tur servisi hazır değil.";
+      return;
+    }
+    const existingSettings = await window.mtnApp.getSettings();
+    const nextSettings = {
+      ...existingSettings,
+      enableTour: tourEnabledToggle.checked
+    };
+    await window.mtnApp.saveSettings(nextSettings);
+    currentSettings = nextSettings;
+    if (helpMenuWrap) {
+      helpMenuWrap.classList.toggle(
+        "is-hidden",
+        nextSettings.enableTour === false
+      );
+    }
+    if (tourStatusEl) {
+      tourStatusEl.textContent = nextSettings.enableTour
+        ? "Tur özelliği aktif."
+        : "Tur özelliği pasif.";
+    }
   });
 }
 
@@ -6168,6 +6474,176 @@ if (companyForm) {
     currentSettings = nextSettings;
     applyBranding(nextSettings);
     settingsStatusEl.textContent = "Firma bilgileri kaydedildi.";
+  });
+}
+
+const renderPeriodPreview = (preview) => {
+  if (!periodPreviewOutput) return;
+  if (!preview) {
+    periodPreviewOutput.innerHTML = "";
+    return;
+  }
+  periodPreviewOutput.innerHTML = `
+    <strong>${preview.periodYear} → ${preview.toYear}</strong><br/>
+    Cari: ${preview.customerCount} kayıt • Net bakiye: ${formatCurrency(
+      preview.customerBalances.reduce((sum, item) => sum + Number(item.balance || 0), 0)
+    )}<br/>
+    Kasa: ${formatCurrency(preview.cashBalance)} (Gelir ${formatCurrency(
+      preview.cashIncome
+    )} / Gider ${formatCurrency(preview.cashExpense)})<br/>
+    Stok: ${preview.stockCount} kalem • Değer ${formatCurrency(preview.stockValue)}
+  `;
+};
+
+if (periodPreviewButton) {
+  periodPreviewButton.addEventListener("click", async () => {
+    if (!window.mtnApp?.previewPeriodClose) {
+      if (periodLog) periodLog.textContent = "Devir servisi hazır değil.";
+      return;
+    }
+    const year = Number(periodYearInput?.value) || new Date().getFullYear();
+    const result = await window.mtnApp.previewPeriodClose({ year });
+    if (!result.ok) {
+      if (periodLog) periodLog.textContent = result.error || "Önizleme başarısız.";
+      return;
+    }
+    renderPeriodPreview(result.preview);
+    if (periodLog) periodLog.textContent = "Simülasyon hazır.";
+  });
+}
+
+if (periodCloseButton) {
+  periodCloseButton.addEventListener("click", async () => {
+    if (!window.mtnApp?.closePeriod) {
+      if (periodLog) periodLog.textContent = "Devir servisi hazır değil.";
+      return;
+    }
+    const year = Number(periodYearInput?.value) || new Date().getFullYear();
+    const result = await window.mtnApp.closePeriod({
+      year,
+      lockPeriod: periodLockToggle?.checked
+    });
+    if (!result.ok) {
+      if (periodLog) periodLog.textContent = result.error || "Devir tamamlanamadı.";
+      return;
+    }
+    if (periodLog) periodLog.textContent = "Devir kaydı oluşturuldu.";
+    const updated = await window.mtnApp.getSettings();
+    currentSettings = updated;
+    if (periodYearInput) periodYearInput.value = updated.currentPeriodYear || year + 1;
+  });
+}
+
+if (periodRollbackButton) {
+  periodRollbackButton.addEventListener("click", async () => {
+    if (!window.mtnApp?.getPeriodBatches || !window.mtnApp?.rollbackPeriod) {
+      if (periodLog) periodLog.textContent = "Geri alma servisi hazır değil.";
+      return;
+    }
+    const batches = await window.mtnApp.getPeriodBatches();
+    const latest = batches?.batches?.at(-1);
+    if (!latest) {
+      if (periodLog) periodLog.textContent = "Geri alınacak devir bulunamadı.";
+      return;
+    }
+    const result = await window.mtnApp.rollbackPeriod({ batchId: latest.id });
+    if (!result.ok) {
+      if (periodLog) periodLog.textContent = result.error || "Geri alma başarısız.";
+      return;
+    }
+    if (periodLog) periodLog.textContent = "Devir geri alındı.";
+    renderPeriodPreview(null);
+  });
+}
+
+const updateOnboardingChecks = () => {
+  if (!onboardingChecks) return;
+  const items = [
+    { label: "Firma adı", ok: Boolean(onboardingCompanyName?.value?.trim()) },
+    { label: "Yönetici kullanıcı", ok: Boolean(onboardingAdminUsername?.value?.trim()) },
+    { label: "Dönem yılı", ok: Boolean(onboardingPeriodYear?.value) },
+    { label: "Yedek klasörü", ok: Boolean(onboardingBackupFolder?.value?.trim()) }
+  ];
+  onboardingChecks.innerHTML = items
+    .map((item) => `<div>${item.ok ? "✔" : "○"} ${item.label}</div>`)
+    .join("");
+};
+
+const saveOnboardingSettings = async () => {
+  if (!window.mtnApp?.saveSettings) {
+    setStatus("Kurulum servisi hazır değil.");
+    return false;
+  }
+  const existingSettings = await window.mtnApp.getSettings();
+  const logoFile = onboardingCompanyLogo?.files?.[0];
+  const logoDataUrl = await readLogoFile(logoFile);
+  const adminUser = onboardingAdminUsername?.value?.trim()
+    ? [
+        {
+          username: onboardingAdminUsername.value.trim(),
+          password: onboardingAdminPassword?.value || "1453",
+          role: "admin",
+          displayName: onboardingAdminName?.value || onboardingAdminUsername.value.trim()
+        }
+      ]
+    : existingSettings.users || [];
+  const payload = {
+    companyName: onboardingCompanyName?.value?.trim() || existingSettings.companyName,
+    companyPhone: onboardingCompanyPhone?.value?.trim() || existingSettings.companyPhone,
+    companyAddress: onboardingCompanyAddress?.value?.trim() || existingSettings.companyAddress,
+    taxNumber: onboardingTaxNumber?.value?.trim() || existingSettings.taxNumber,
+    logoDataUrl: logoDataUrl || existingSettings.logoDataUrl,
+    currentPeriodYear: Number(onboardingPeriodYear?.value) || existingSettings.currentPeriodYear,
+    enableAutoBackup: onboardingAutoBackup?.value === "true",
+    backupFolder: onboardingBackupFolder?.value?.trim() || existingSettings.backupFolder,
+    users: adminUser,
+    hasOnboarded: true,
+    onboardingStep: 0,
+    onboardingCompletedAt: new Date().toISOString()
+  };
+  await window.mtnApp.saveSettings({ ...existingSettings, ...payload });
+  currentSettings = { ...existingSettings, ...payload };
+  applyBranding(currentSettings);
+  closeOnboardingWizard();
+  showLoginScreen();
+  return true;
+};
+
+if (onboardingNext) {
+  onboardingNext.addEventListener("click", async () => {
+    if (onboardingStepIndex === onboardingSteps.length) {
+      await saveOnboardingSettings();
+      return;
+    }
+    if (onboardingStepIndex === onboardingSteps.length - 1) {
+      updateOnboardingChecks();
+      onboardingStepIndex += 1;
+      renderOnboardingStep(onboardingStepIndex);
+      return;
+    }
+    onboardingStepIndex += 1;
+    renderOnboardingStep(onboardingStepIndex);
+  });
+}
+
+if (onboardingBack) {
+  onboardingBack.addEventListener("click", () => {
+    if (onboardingStepIndex <= 1) return;
+    onboardingStepIndex -= 1;
+    renderOnboardingStep(onboardingStepIndex);
+  });
+}
+
+if (onboardingSkip) {
+  onboardingSkip.addEventListener("click", async () => {
+    const existingSettings = await window.mtnApp.getSettings();
+    await window.mtnApp.saveSettings({
+      ...existingSettings,
+      onboardingStep: onboardingStepIndex
+    });
+    currentSettings = { ...existingSettings, onboardingStep: onboardingStepIndex };
+    closeOnboardingWizard();
+    showLoginScreen();
   });
 }
 
@@ -6386,6 +6862,98 @@ if (toggleSoundButton) {
     refreshSoundToggleLabel();
     try { (uiSoundEnabled ? playUiSound("nav") : null); } catch (_) {}
   });;
+}
+
+if (helpMenuToggle && helpMenuPanel) {
+  helpMenuToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleHelpMenu();
+  });
+  document.addEventListener("click", (event) => {
+    if (!helpMenuPanel.contains(event.target) && event.target !== helpMenuToggle) {
+      toggleHelpMenu(false);
+    }
+  });
+}
+
+if (helpDescribeScreenButton) {
+  helpDescribeScreenButton.addEventListener("click", () => {
+    toggleHelpMenu(false);
+    startTour(currentPanelId);
+  });
+}
+if (helpGeneralTourButton) {
+  helpGeneralTourButton.addEventListener("click", () => {
+    toggleHelpMenu(false);
+    startTour("general");
+  });
+}
+if (helpQuickGuideButton) {
+  helpQuickGuideButton.addEventListener("click", () => {
+    toggleHelpMenu(false);
+    quickGuide?.classList.add("is-visible");
+    quickGuide?.setAttribute("aria-hidden", "false");
+  });
+}
+
+if (assistantFab) {
+  assistantFab.addEventListener("click", () => {
+    openAssistantDock(!assistantDock?.classList.contains("is-open"));
+  });
+}
+document.addEventListener("keydown", (event) => {
+  if (event.key === "F1") {
+    event.preventDefault();
+    openAssistantDock(true);
+  }
+});
+if (assistantDockClose) {
+  assistantDockClose.addEventListener("click", () => openAssistantDock(false));
+}
+assistantDockTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setAssistantDockTab(tab.dataset.assistantTab);
+  });
+});
+if (assistantDockSend && assistantDockInput) {
+  assistantDockSend.addEventListener("click", () => {
+    const value = assistantDockInput.value.trim();
+    if (!value) return;
+    appendAssistantDockLog(`Talep alındı: ${value}`);
+    assistantDockInput.value = "";
+  });
+}
+
+if (quickGuideClose) {
+  quickGuideClose.addEventListener("click", () => {
+    quickGuide.classList.remove("is-visible");
+    quickGuide.setAttribute("aria-hidden", "true");
+  });
+}
+
+if (tourSkip) {
+  tourSkip.addEventListener("click", () => {
+    tourOverlay.classList.remove("is-visible");
+    tourOverlay.setAttribute("aria-hidden", "true");
+  });
+}
+if (tourNext) {
+  tourNext.addEventListener("click", () => {
+    if (tourStepIndex >= tourSteps.length - 1) {
+      tourOverlay.classList.remove("is-visible");
+      tourOverlay.setAttribute("aria-hidden", "true");
+      return;
+    }
+    tourStepIndex += 1;
+    renderTourStep();
+  });
+}
+if (tourBack) {
+  tourBack.addEventListener("click", () => {
+    if (tourStepIndex <= 0) return;
+    tourStepIndex -= 1;
+    renderTourStep();
+  });
 }
 
 if (backupOpenButton) {
@@ -6632,10 +7200,13 @@ if (detailReportButton) {
 
     const result = await window.mtnApp.generateReport({
       title: `Cari-Rapor-${customerName.replace(/\s+/g, "-")}`,
-      html
+      html,
+      docNo: customerId
     });
-    reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
-    await window.mtnApp?.openFile?.(result.reportFile);
+    const ok = handleReportResult(result, reportPathEl, "Cari Raporu");
+    if (ok) {
+      await window.mtnApp?.openFile?.(result.reportFile);
+    }
   });
 }
 
@@ -6661,7 +7232,7 @@ if (offerPdfButton) {
       title: "Satis-Faturasi",
       html
     });
-    reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
+    handleReportResult(result, reportPathEl, "Satış PDF");
   });
 }
 
@@ -6730,7 +7301,7 @@ if (offerPdfIndustrialButton) {
       title: "Endustriyel-Teklif",
       html
     });
-    reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
+    handleReportResult(result, reportPathEl, "Teklif PDF");
   });
 }
 
@@ -6811,8 +7382,10 @@ const saveProposal = async (type) => {
   );
   const report = await window.mtnApp.generateReport({
     title: isIndustrial ? "Endustriyel-Teklif" : "Ic-Tesisat-Teklif",
-    html
+    html,
+    docNo: offerNo
   });
+  const pdfOk = handleReportResult(report, reportPathEl, "Teklif PDF");
   const data = await window.mtnApp.createProposal({
     title: titleInput?.value || (isIndustrial ? "Endüstriyel Teklif" : "İç Tesisat Teklif"),
     type: isIndustrial ? "industrial" : "internal",
@@ -6832,7 +7405,7 @@ const saveProposal = async (type) => {
     createdAt: dateInput?.value
       ? `${dateInput.value}T${new Date().toTimeString().slice(0, 8)}`
       : new Date().toISOString(),
-    pdfPath: report.reportFile
+    pdfPath: pdfOk ? report.reportFile : ""
   });
   renderOffers(data.proposals || []);
   refreshAccountingPanels(data);
@@ -7207,7 +7780,9 @@ function forceKeyboardFocus(panelId) {
     // Görünür paneldeki ilk inputa odaklan
     const panel = document.getElementById(panelId) || document.querySelector(".panel:not(.is-hidden)");
     if (!panel) return;
-    const input = panel.querySelector("input:not([type=hidden]):not([disabled]), textarea:not([disabled]), select:not([disabled])");
+    const input = panel.querySelector(
+      "input:not([type=hidden]):not([disabled]):not([readonly]), textarea:not([disabled]), select:not([disabled])"
+    );
     if (input) {
       input.focus();
       input.select?.();
@@ -8155,7 +8730,8 @@ const showInlineTransactionForm = () => {
       if (window.mtnApp?.generateReport) {
         try {
           const html = `<h1>Tahsilat Makbuzu</h1><p>Cari: ${customer.name || ''}</p><p>Tutar: ${formatCurrency(Number(payload.amount || 0))}</p><p>Tarih: ${payload.createdAt}</p>`;
-          await window.mtnApp.generateReport({ title: 'Tahsilat Makbuzu', html });
+          const report = await window.mtnApp.generateReport({ title: 'Tahsilat Makbuzu', html });
+          handleReportResult(report, reportPathEl, "Tahsilat Makbuzu");
         } catch (_) {
           // ignore pdf generation errors
         }
@@ -8221,6 +8797,7 @@ const showInlineOfferForm = () => {
         try {
           const html = `<h1>${payload.title}</h1><p>Tutar: ${formatCurrency(payload.total)}</p>`;
           const report = await window.mtnApp.generateReport({ title: payload.title || 'Teklif', html });
+          handleReportResult(report, reportPathEl, "Teklif PDF");
           if (report?.reportFile) {
             pdfPath = report.reportFile;
           }
@@ -8392,7 +8969,8 @@ const showInlinePaymentForm = () => {
       if (window.mtnApp?.generateReport) {
         try {
           const html = `<h1>Ödeme Makbuzu</h1><p>Cari: ${customer.name || ''}</p><p>Tutar: ${formatCurrency(Number(payload.amount || 0))}</p><p>Tarih: ${payload.createdAt}</p>`;
-          await window.mtnApp.generateReport({ title: 'Ödeme Makbuzu', html });
+          const report = await window.mtnApp.generateReport({ title: 'Ödeme Makbuzu', html });
+          handleReportResult(report, reportPathEl, "Ödeme Makbuzu");
         } catch (_) {
           // ignore PDF errors
         }
@@ -9315,4 +9893,3 @@ async function openCustomerSavedOffers(customerId) {
     mtnShowError('İşlem Hatası', `${msg}\n${stack}`);
   });
 })();
-
