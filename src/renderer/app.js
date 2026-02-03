@@ -2717,6 +2717,7 @@ const renderCustomers = (items) => {
           ? "badge badge--income"
           : "badge";
     const dueDate = getCustomerDueDate(item);
+    const dueLabel = dueDate ? dueDate.toLocaleDateString("tr-TR") : "";
     const isDueSoon =
       balanceValue > 0 &&
       dueDate &&
@@ -2749,14 +2750,17 @@ const renderCustomers = (items) => {
       <td>${item.email || "-"}</td>
       <td><span class="${balanceBadgeClass}">${formatCurrency(balanceValue)}</span></td>
       <td>
-        <span class="badge ${isActive ? "badge--income" : "badge--expense"}">
-          ${isActive ? "Aktif" : "Pasif"}
-        </span>
-        ${
-          isDueSoon
-            ? `<span class="badge badge--warning">Vade Yakın</span>`
-            : ""
-        }
+        <div class="status-badges">
+          <span class="badge ${isActive ? "badge--income" : "badge--expense"}">
+            ${isActive ? "Aktif" : "Pasif"}
+          </span>
+          ${
+            isDueSoon
+              ? `<span class="badge badge--warning">Vade Yakın</span>`
+              : ""
+          }
+          ${dueLabel ? `<span class="badge badge--info">Vade: ${dueLabel}</span>` : ""}
+        </div>
       </td>
       <td>
         <button class="ghost ghost--sm" type="button" data-action="customer-detail">Detay</button>
@@ -4265,6 +4269,7 @@ const renderAssistant = (data) => {
     return;
   }
   const cashTransactions = data.cashTransactions || [];
+  const stockMovements = data.stockMovements || [];
   const totalIncome = cashTransactions
     .filter((item) => item.type === "gelir")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
@@ -4278,6 +4283,20 @@ const renderAssistant = (data) => {
     (sum, item) => sum + Number(item.quantity || 0),
     0
   );
+  const now = Date.now();
+  const staleCutoff = now - 90 * DAYS_IN_MS;
+  const movementMap = new Map();
+  stockMovements.forEach((movement) => {
+    const key = normalizeText(movement.stockName || "");
+    if (!key || !movement.createdAt) {
+      return;
+    }
+    const date = new Date(movement.createdAt);
+    const prev = movementMap.get(key);
+    if (!prev || date > prev) {
+      movementMap.set(key, date);
+    }
+  });
 
   const daily = [
     `Kasa neti: ${formatCurrency(cashBalance)}`,
@@ -4290,13 +4309,58 @@ const renderAssistant = (data) => {
     const threshold = Number(item.threshold || 0);
     return threshold > 0 && Number(item.quantity || 0) <= threshold;
   });
+  const overdueCustomers = (data.customers || [])
+    .map((item) => ({
+      ...item,
+      dueDate: getCustomerDueDate(item)
+    }))
+    .filter(
+      (item) =>
+        Number(item.balance || 0) > 0 &&
+        item.dueDate &&
+        item.dueDate.getTime() < now
+    )
+    .sort((a, b) => a.dueDate - b.dueDate);
+  const staleStocks = (data.stocks || []).filter((item) => {
+    const qty = Number(item.quantity || 0);
+    if (qty <= 0) {
+      return false;
+    }
+    const key = normalizeText(item.normalizedName || item.name || "");
+    if (!key) {
+      return false;
+    }
+    const lastMove = movementMap.get(key);
+    if (!lastMove) {
+      return true;
+    }
+    return lastMove.getTime() < staleCutoff;
+  });
   const pendingBalances = (data.customers || [])
     .filter((item) => Number(item.balance || 0) > 0)
+    .slice(0, 5);
+  const negativeStocks = (data.stocks || []).filter(
+    (item) => Number(item.quantity || 0) < 0
+  );
+  const inactiveWithBalance = (data.customers || [])
+    .filter((item) => item.isActive === false && Number(item.balance || 0) !== 0)
     .slice(0, 5);
 
   const reminders = [
     ...lowStocks.slice(0, 5).map(
       (item) => `Kritik stok: ${item.name} (${item.quantity || 0})`
+    ),
+    ...negativeStocks.slice(0, 3).map(
+      (item) => `Negatif stok: ${item.name} (${item.quantity || 0})`
+    ),
+    ...overdueCustomers.slice(0, 4).map((item) => {
+      const dueLabel = item.dueDate
+        ? item.dueDate.toLocaleDateString("tr-TR")
+        : "-";
+      return `Vadesi geçen cari: ${item.name} (${dueLabel})`;
+    }),
+    ...staleStocks.slice(0, 4).map(
+      (item) => `Hareketsiz stok: ${item.name} (${item.quantity || 0})`
     ),
     ...pendingBalances.map(
       (item) => `Tahsilat bekleyen cari: ${item.name} (${formatCurrency(
@@ -4304,6 +4368,13 @@ const renderAssistant = (data) => {
       )})`
     )
   ];
+  reminders.push(
+    ...inactiveWithBalance.map(
+      (item) => `Pasif cari bakiyesi: ${item.name} (${formatCurrency(
+        Number(item.balance || 0)
+      )})`
+    )
+  );
   const paymentReminders = loadReminders().slice(0, 5).map(
     (item) => `Ödeme: ${item.title} (${getReminderLabel(item)})`
   );
@@ -4312,6 +4383,27 @@ const renderAssistant = (data) => {
   const suggestions = [];
   if (!currentSettings.enableAutoBackup) {
     suggestions.push("Otomatik yedeklemeyi aktif ederek veri güvenliğini artırın.");
+  }
+  if (cashBalance < 0) {
+    suggestions.push("Kasa bakiyesi negatif. Gider planı ve tahsilat takibini sıklaştırın.");
+  }
+  if (overdueCustomers.length) {
+    suggestions.push(
+      `Vadesi geçmiş ${overdueCustomers.length} cari var. Tahsilat planı oluşturun.`
+    );
+  }
+  if (staleStocks.length) {
+    suggestions.push(
+      `Hareket görmeyen ${staleStocks.length} stok kartı var. Devir/indirim planı yapın.`
+    );
+  }
+  if (negativeStocks.length) {
+    suggestions.push(
+      `Negatif stok (${negativeStocks.length}) bulundu. Depo hareketlerini kontrol edin.`
+    );
+  }
+  if (inactiveWithBalance.length) {
+    suggestions.push("Pasif carilerde bakiye var. Hesap durumlarını netleştirin.");
   }
   if (!lowStocks.length && totalStocks > 0) {
     suggestions.push("Kritik stok yok, periyodik sayım raporu almayı unutmayın.");
@@ -4569,6 +4661,14 @@ const initApp = async () => {
   }
 };
 
+const buildDocNo = (prefix, dateValue = new Date()) => {
+  const date = new Date(dateValue);
+  const safeDate = Number.isNaN(date.getTime()) ? new Date() : date;
+  const datePart = safeDate.toISOString().slice(0, 10).replace(/-/g, "");
+  const timePart = safeDate.toISOString().slice(11, 16).replace(":", "");
+  return `${prefix}-${datePart}${timePart}`;
+};
+
 const buildReportTable = (title, headers, rows, options = {}) => {
   const headerCells = headers.map((header) => `<th>${header}</th>`).join("");
   const rowHtml = rows
@@ -4580,6 +4680,9 @@ const buildReportTable = (title, headers, rows, options = {}) => {
     )
     .join("");
   const { includeWatermark = false } = options;
+  const reportDateValue = options.reportDate || new Date();
+  const reportDate = new Date(reportDateValue).toLocaleString("tr-TR");
+  const reportNo = options.docNo || buildDocNo("RPR", reportDateValue);
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
@@ -4597,6 +4700,8 @@ const buildReportTable = (title, headers, rows, options = {}) => {
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Rapor Tarihi: ${escapeHtml(reportDate)}</p>
         </div>
       </div>
   `;
@@ -4618,7 +4723,7 @@ const buildReportTable = (title, headers, rows, options = {}) => {
   `;
 };
 
-const buildInvoiceHtml = (title, rows) => {
+const buildInvoiceHtml = (title, rows, meta = {}) => {
   const rowHtml = rows
     .map(
       (row) =>
@@ -4627,6 +4732,9 @@ const buildInvoiceHtml = (title, rows) => {
           .join("")}</tr>`
     )
     .join("");
+  const reportDateValue = meta.reportDate || new Date();
+  const reportDate = new Date(reportDateValue).toLocaleString("tr-TR");
+  const reportNo = meta.docNo || buildDocNo("SAT", reportDateValue);
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
@@ -4644,6 +4752,8 @@ const buildInvoiceHtml = (title, rows) => {
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Tarih: ${escapeHtml(reportDate)}</p>
         </div>
       </div>
       <div class="report-watermark">${
@@ -4684,8 +4794,12 @@ const buildReceiptHtml = ({
   paymentMethod,
   note,
   createdAt,
-  title
+  title,
+  docNo
 }) => {
+  const reportDateValue = createdAt || new Date();
+  const reportDate = new Date(reportDateValue).toLocaleString("tr-TR");
+  const reportNo = docNo || buildDocNo("MKZ", reportDateValue);
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
@@ -4703,13 +4817,13 @@ const buildReceiptHtml = ({
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Tarih: ${escapeHtml(reportDate)}</p>
         </div>
       </div>
       <table>
         <tbody>
-          <tr><th>Tarih</th><td>${escapeHtml(
-            new Date(createdAt).toLocaleString("tr-TR")
-          )}</td></tr>
+          <tr><th>İşlem Tarihi</th><td>${escapeHtml(reportDate)}</td></tr>
           <tr><th>Cari</th><td>${escapeHtml(customerName || "-")}</td></tr>
           <tr><th>Ödeme Türü</th><td>${escapeHtml(paymentMethod || "-")}</td></tr>
           <tr><th>Tutar</th><td>${escapeHtml(formatCurrency(amount))}</td></tr>
@@ -4798,6 +4912,8 @@ const buildCustomerFullReportHtml = (customerName, ledgerRows, jobRows, totals) 
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
   const logoSrc = currentSettings.logoDataUrl || "";
+  const reportDate = new Date();
+  const reportNo = buildDocNo("CARI", reportDate);
   const logoHtml = logoSrc
     ? `<img class="report-logo-img" src="${logoSrc}" alt="Firma logosu" />`
     : `<div class="report-logo">MTN</div>`;
@@ -4822,7 +4938,8 @@ const buildCustomerFullReportHtml = (customerName, ledgerRows, jobRows, totals) 
           <h1>${escapeHtml(companyName)}</h1>
           <p>${escapeHtml(customerName)}</p>
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(taxNumber)}</p>
-          <p>${new Date().toLocaleString("tr-TR")}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>${reportDate.toLocaleString("tr-TR")}</p>
         </div>
       </div>
       ${watermark}
@@ -4864,6 +4981,8 @@ const buildCustomerJobsInvoiceHtml = (customerName, jobs, totals) => {
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
+  const reportDate = new Date();
+  const reportNo = buildDocNo("IS", reportDate);
   const logoSrc = currentSettings.logoDataUrl || "";
   const logoHtml = logoSrc
     ? `<img class="report-logo-img" src="${logoSrc}" alt="Firma logosu" />`
@@ -4881,6 +5000,8 @@ const buildCustomerJobsInvoiceHtml = (customerName, jobs, totals) => {
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Tarih: ${escapeHtml(reportDate.toLocaleString("tr-TR"))}</p>
         </div>
       </div>
       ${watermark}
