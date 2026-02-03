@@ -20,7 +20,10 @@ const getDefaultData = () => ({
   ledgerEntries: [],
   unitConversions: [],
   auditLogs: [],
-  proposals: []
+  proposals: [],
+  periods: [],
+  periodBatches: [],
+  periodLocks: []
 });
 
 const getDefaultAccounts = () => [
@@ -80,6 +83,8 @@ const loadSettings = async () => {
     enableAutoBackup: false,
     lastAutoBackupAt: "",
     hasOnboarded: false,
+    onboardingStep: 0,
+    onboardingCompletedAt: "",
     companyName: "MTN ENERJİ MÜHENDİSLİK (METİN DÖŞ)",
     companyOwner: "Metin Döş",
     companyAddress:
@@ -90,6 +95,12 @@ const loadSettings = async () => {
     taxOffice: "ŞAHİNBEY",
     taxNumber: "14168163156",
     logoDataUrl: "",
+    backupFolder: "",
+    currentPeriodYear: new Date().getFullYear(),
+    enableTour: true,
+    autoUpdateEnabled: true,
+    autoUpdateLastCheckedAt: "",
+    autoUpdateChannel: "stable",
     defaultCashName: "Ana Kasa",
     defaultWarehouse: "Ana Depo",
     stockValuationMethod: "ortalama",
@@ -198,6 +209,62 @@ const createRecord = (items, record) => {
 
 const normalizeNumber = (value) => Number(value || 0);
 
+const getCurrentPeriodYear = (settings) =>
+  Number(settings?.currentPeriodYear) || new Date().getFullYear();
+
+const resolvePeriodYear = (record, fallbackYear) => {
+  if (record?.periodYear) {
+    return Number(record.periodYear);
+  }
+  const createdAt = record?.createdAt || record?.date || record?.issuedAt;
+  const parsed = createdAt ? new Date(createdAt) : null;
+  if (parsed && !Number.isNaN(parsed.getTime())) {
+    return parsed.getFullYear();
+  }
+  return Number(fallbackYear);
+};
+
+const ensurePeriods = (periods, year) => {
+  const normalizedYear = Number(year);
+  const exists = periods.find((period) => Number(period.year) === normalizedYear);
+  if (exists) {
+    return periods;
+  }
+  return [
+    ...periods,
+    {
+      year: normalizedYear,
+      status: "open",
+      locked: false,
+      createdAt: new Date().toISOString()
+    }
+  ];
+};
+
+const ensurePeriodLock = (periodLocks, year, locked) => {
+  const normalizedYear = Number(year);
+  const cleaned = (periodLocks || []).filter(
+    (item) => Number(item.year) !== normalizedYear
+  );
+  if (!locked) {
+    return cleaned;
+  }
+  return [
+    ...cleaned,
+    {
+      year: normalizedYear,
+      lockedAt: new Date().toISOString()
+    }
+  ];
+};
+
+const isPeriodLocked = (data, year) => {
+  const normalizedYear = Number(year);
+  return (data.periodLocks || []).some(
+    (entry) => Number(entry.year) === normalizedYear
+  );
+};
+
 const normalizeSpaces = (value) => {
   return String(value || "")
     .replace(/\s+/g, " ")
@@ -261,25 +328,49 @@ const pruneAuditLogs = (logs) => {
 const normalizeData = (data) => ({
   ...getDefaultData(),
   ...data,
+  periods: data.periods || [],
+  periodBatches: data.periodBatches || [],
+  periodLocks: data.periodLocks || [],
   customers: (data.customers || []).map((customer) => ({
     ...customer,
     normalizedName:
       customer.normalizedName || normalizeSpaces(customer.name || ""),
     isActive: customer.isActive !== false
   })),
-  customerDebts: data.customerDebts || [],
-  customerJobs: data.customerJobs || [],
+  customerDebts: (data.customerDebts || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
+  customerJobs: (data.customerJobs || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
   stocks: (data.stocks || []).map((stock) => ({
     ...stock,
     normalizedName: stock.normalizedName || normalizeStockName(stock.name || ""),
     warehouse: stock.warehouse || "Ana Depo",
     isActive: stock.isActive !== false
   })),
-  stockReceipts: data.stockReceipts || [],
-  cashTransactions: data.cashTransactions || [],
-  sales: data.sales || [],
-  stockMovements: data.stockMovements || [],
-  invoices: data.invoices || [],
+  stockReceipts: (data.stockReceipts || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
+  cashTransactions: (data.cashTransactions || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
+  sales: (data.sales || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
+  stockMovements: (data.stockMovements || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
+  invoices: (data.invoices || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
   accounts: (data.accounts && data.accounts.length ? data.accounts : getDefaultAccounts()).map(
     (account) => ({
       ...account,
@@ -287,11 +378,68 @@ const normalizeData = (data) => ({
       name: normalizeSpaces(account.name || "")
     })
   ),
-  ledgerEntries: data.ledgerEntries || [],
+  ledgerEntries: (data.ledgerEntries || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  })),
   unitConversions: data.unitConversions || [],
   auditLogs: pruneAuditLogs(data.auditLogs || []),
-  proposals: data.proposals || []
+  proposals: (data.proposals || []).map((entry) => ({
+    ...entry,
+    periodYear: resolvePeriodYear(entry, new Date().getFullYear())
+  }))
 });
+
+const calculatePeriodPreview = (data, year) => {
+  const periodYear = Number(year);
+  const cashTransactions = (data.cashTransactions || []).filter(
+    (entry) => Number(entry.periodYear) === periodYear
+  );
+  const cashIncome = cashTransactions
+    .filter((entry) => entry.type === "gelir")
+    .reduce((sum, entry) => sum + normalizeNumber(entry.amount), 0);
+  const cashExpense = cashTransactions
+    .filter((entry) => entry.type === "gider")
+    .reduce((sum, entry) => sum + normalizeNumber(entry.amount), 0);
+  const cashBalance = cashIncome - cashExpense;
+
+  const customerBalances = (data.customers || [])
+    .map((customer) => ({
+      customerId: customer.id,
+      customerName: customer.name,
+      balance: normalizeNumber(customer.balance)
+    }))
+    .filter((entry) => entry.balance !== 0);
+
+  const stockSnapshots = (data.stocks || []).map((stock) => {
+    const quantity = normalizeNumber(stock.quantity);
+    const unitPrice = normalizeNumber(stock.purchasePrice || stock.salePrice);
+    return {
+      stockId: stock.id,
+      stockName: stock.name,
+      quantity,
+      unitPrice,
+      totalValue: quantity * unitPrice
+    };
+  });
+  const stockValue = stockSnapshots.reduce(
+    (sum, item) => sum + normalizeNumber(item.totalValue),
+    0
+  );
+
+  return {
+    periodYear,
+    toYear: periodYear + 1,
+    cashBalance,
+    cashIncome,
+    cashExpense,
+    customerCount: customerBalances.length,
+    customerBalances,
+    stockCount: stockSnapshots.length,
+    stockValue,
+    stockSnapshots
+  };
+};
 
 const addAuditLog = (data, entry) => {
   data.auditLogs = pruneAuditLogs(createRecord(data.auditLogs, entry));
@@ -938,6 +1086,111 @@ app.whenReady().then(() => {
     return payload;
   });
 
+  ipcMain.handle("periods:preview", async (_event, payload) => {
+    const data = await loadStorage();
+    const settings = await loadSettings();
+    const year = Number(payload?.year || settings.currentPeriodYear || new Date().getFullYear());
+    return { ok: true, preview: calculatePeriodPreview(data, year) };
+  });
+
+  ipcMain.handle("periods:list", async () => {
+    const data = await loadStorage();
+    return { ok: true, periods: data.periods || [] };
+  });
+
+  ipcMain.handle("periods:batches", async () => {
+    const data = await loadStorage();
+    return { ok: true, batches: data.periodBatches || [] };
+  });
+
+  ipcMain.handle("periods:close", async (_event, payload) => {
+    const data = await loadStorage();
+    const settings = await loadSettings();
+    const year = Number(payload?.year || settings.currentPeriodYear || new Date().getFullYear());
+    const toYear = year + 1;
+    const lockPeriod = Boolean(payload?.lockPeriod);
+    const switchPeriod = payload?.switchPeriod !== false;
+
+    if ((data.periodBatches || []).some((batch) => Number(batch.fromYear) === year)) {
+      return { ok: false, error: "Bu dönem için zaten devir işlemi var." };
+    }
+
+    const preview = calculatePeriodPreview(data, year);
+    await createBackupEntry({
+      meta: {
+        module: "year-end",
+        year,
+        appVersion: settings?.appVersion || "0.2.1"
+      },
+      data
+    });
+
+    data.periodBatches = createRecord(data.periodBatches, {
+      fromYear: year,
+      toYear,
+      preview,
+      locked: lockPeriod,
+      status: "closed",
+      label: `Yıl Sonu Devri ${year}`
+    });
+    data.periods = ensurePeriods(data.periods || [], year);
+    data.periods = ensurePeriods(data.periods || [], toYear).map((period) => {
+      if (Number(period.year) === year) {
+        return { ...period, status: "closed", locked: lockPeriod, closedAt: new Date().toISOString() };
+      }
+      if (Number(period.year) === toYear) {
+        return { ...period, status: "open", locked: false };
+      }
+      return period;
+    });
+    data.periodLocks = ensurePeriodLock(data.periodLocks || [], year, lockPeriod);
+
+    addAuditLog(data, {
+      module: "periods",
+      action: "close",
+      message: `Yıl sonu devri: ${year} → ${toYear}`
+    });
+    await saveStorage(data);
+    await syncStorageCopies(data);
+    await maybeAutoBackup(data);
+
+    if (switchPeriod) {
+      await saveSettings({ ...settings, currentPeriodYear: toYear });
+    }
+
+    return { ok: true, batch: data.periodBatches.at(-1) };
+  });
+
+  ipcMain.handle("periods:rollback", async (_event, payload) => {
+    const data = await loadStorage();
+    const { batchId } = payload || {};
+    if (!batchId) {
+      return { ok: false, error: "Batch ID eksik." };
+    }
+    const batch = (data.periodBatches || []).find((entry) => entry.id === batchId);
+    if (!batch) {
+      return { ok: false, error: "Batch bulunamadı." };
+    }
+    data.periodBatches = (data.periodBatches || []).filter((entry) => entry.id !== batchId);
+    data.periodLocks = ensurePeriodLock(data.periodLocks || [], batch.fromYear, false);
+    data.periods = (data.periods || []).map((period) => {
+      if (Number(period.year) === Number(batch.fromYear)) {
+        return { ...period, status: "open", locked: false, reopenedAt: new Date().toISOString() };
+      }
+      return period;
+    });
+
+    addAuditLog(data, {
+      module: "periods",
+      action: "rollback",
+      message: `Yıl sonu devri geri alındı: ${batch.fromYear} → ${batch.toYear}`
+    });
+    await saveStorage(data);
+    await syncStorageCopies(data);
+    await maybeAutoBackup(data);
+    return { ok: true };
+  });
+
   ipcMain.handle("accounts:create", async (_event, payload) => {
     const data = await loadStorage();
     const normalizedCode = String(payload.code || "").trim();
@@ -980,6 +1233,8 @@ app.whenReady().then(() => {
 
   ipcMain.handle("customers:create", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
     const { openingDebt, openingCredit, ...rest } = payload;
     const normalizedOpeningDebt = normalizeNumber(openingDebt);
     const normalizedOpeningCredit = normalizeNumber(openingCredit);
@@ -1004,14 +1259,16 @@ app.whenReady().then(() => {
         customerName: latestCustomer?.name || "",
         amount: normalizedOpeningDebt,
         note: "Açılış borcu",
-        createdAt: payload.createdAt
+        createdAt: payload.createdAt,
+        periodYear
       });
       addLedgerEntry(data, {
         accountCode: "120",
         accountName: "ALICILAR",
         debit: normalizedOpeningDebt,
         credit: 0,
-        note: "Cari açılış borcu"
+        note: "Cari açılış borcu",
+        periodYear
       });
     }
     if (normalizedOpeningCredit > 0) {
@@ -1021,14 +1278,16 @@ app.whenReady().then(() => {
         customerName: latestCustomer?.name || "",
         amount: -normalizedOpeningCredit,
         note: "Açılış alacak",
-        createdAt: payload.createdAt
+        createdAt: payload.createdAt,
+        periodYear
       });
       addLedgerEntry(data, {
         accountCode: "120",
         accountName: "ALICILAR",
         debit: 0,
         credit: normalizedOpeningCredit,
-        note: "Cari açılış alacak"
+        note: "Cari açılış alacak",
+        periodYear
       });
     }
     addAuditLog(data, {
@@ -1127,6 +1386,11 @@ app.whenReady().then(() => {
 
   ipcMain.handle("customers:transaction", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { customerId, amount, note, createdAt, type, paymentMethod } = payload;
     const normalizedAmount = normalizeNumber(amount);
     const customerName = data.customers.find(
@@ -1151,14 +1415,16 @@ app.whenReady().then(() => {
       note: note || "Cari İşlem",
       createdAt,
       customerId,
-      customerName
+      customerName,
+      periodYear
     });
     addLedgerEntry(data, {
       accountCode: type === "tahsilat" ? "100" : "320",
       accountName: type === "tahsilat" ? "KASA" : "SATICILAR",
       debit: type === "tahsilat" ? normalizedAmount : 0,
       credit: type === "tahsilat" ? 0 : normalizedAmount,
-      note: note || "Cari işlem"
+      note: note || "Cari işlem",
+      periodYear
     });
     if (type !== "tahsilat") {
       data.customerDebts = createRecord(data.customerDebts, {
@@ -1166,7 +1432,8 @@ app.whenReady().then(() => {
         customerName,
         amount: normalizedAmount,
         note: note || "Cari Ödeme",
-        createdAt
+        createdAt,
+        periodYear
       });
     }
     addAuditLog(data, {
@@ -1182,6 +1449,11 @@ app.whenReady().then(() => {
 
   ipcMain.handle("customers:payment", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { customerId, amount, note, createdAt, paymentMethod } = payload;
     const normalizedAmount = Number(amount || 0);
     const customerName = data.customers.find(
@@ -1206,14 +1478,16 @@ app.whenReady().then(() => {
       note: note || "Cari Tahsilat",
       createdAt,
       customerId,
-      customerName
+      customerName,
+      periodYear
     });
     addLedgerEntry(data, {
       accountCode: "100",
       accountName: "KASA",
       debit: normalizedAmount,
       credit: 0,
-      note: note || "Cari tahsilat"
+      note: note || "Cari tahsilat",
+      periodYear
     });
     addAuditLog(data, {
       module: "customers",
@@ -1228,6 +1502,11 @@ app.whenReady().then(() => {
 
   ipcMain.handle("customers:debt", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { customerId, amount, note, createdAt, paymentMethod } = payload;
     const normalizedAmount = normalizeNumber(amount);
     const customerName = data.customers.find(
@@ -1247,14 +1526,16 @@ app.whenReady().then(() => {
       customerName,
       amount: normalizedAmount,
       note: note || "Cari Borç",
-      createdAt
+      createdAt,
+      periodYear
     });
     addLedgerEntry(data, {
       accountCode: "120",
       accountName: "ALICILAR",
       debit: normalizedAmount,
       credit: 0,
-      note: note || "Cari borç"
+      note: note || "Cari borç",
+      periodYear
     });
     addAuditLog(data, {
       module: "customers",
@@ -1269,6 +1550,11 @@ app.whenReady().then(() => {
 
   ipcMain.handle("customers:job", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const {
       customerId,
       title,
@@ -1293,7 +1579,8 @@ app.whenReady().then(() => {
       total: normalizedTotal,
       note,
       createdAt,
-      isActive: true
+      isActive: true,
+      periodYear
     });
     data.customers = data.customers.map((customer) => {
       if (customer.id !== customerId) {
@@ -1309,7 +1596,8 @@ app.whenReady().then(() => {
       accountName: "ALICILAR",
       debit: normalizedTotal,
       credit: 0,
-      note: "İş kalemi"
+      note: "İş kalemi",
+      periodYear
     });
     addAuditLog(data, {
       module: "customers",
@@ -1325,10 +1613,15 @@ app.whenReady().then(() => {
   
   ipcMain.handle("customers:job:update", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
     const { id, title, quantity, unit, unitPrice, total, note, createdAt, isActive } = payload || {};
     const current = data.customerJobs.find((job) => job.id === id);
     if (!current) {
       return data;
+    }
+    const periodYear = Number(current.periodYear || getCurrentPeriodYear(settings));
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
     }
     const nextTotal = normalizeNumber(total ?? current.total);
     const delta = nextTotal - normalizeNumber(current.total);
@@ -1361,7 +1654,8 @@ app.whenReady().then(() => {
       accountName: "ALICILAR",
       debit: delta > 0 ? delta : 0,
       credit: delta < 0 ? Math.abs(delta) : 0,
-      note: "İş kalemi düzeltme"
+      note: "İş kalemi düzeltme",
+      periodYear
     });
 
     addAuditLog(data, {
@@ -1378,10 +1672,15 @@ app.whenReady().then(() => {
 
   ipcMain.handle("customers:job:delete", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
     const { id } = payload || {};
     const current = data.customerJobs.find((job) => job.id === id);
     if (!current) {
       return data;
+    }
+    const periodYear = Number(current.periodYear || getCurrentPeriodYear(settings));
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
     }
     const amount = normalizeNumber(current.total);
 
@@ -1400,7 +1699,8 @@ app.whenReady().then(() => {
       accountName: "ALICILAR",
       debit: 0,
       credit: amount,
-      note: "İş kalemi silme"
+      note: "İş kalemi silme",
+      periodYear
     });
 
     addAuditLog(data, {
@@ -1495,6 +1795,10 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
   ipcMain.handle("stocks:receipt", async (_event, payload) => {
     const data = await loadStorage();
     const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { items = [], createdAt, note, supplier, warehouse, attachment, draft } =
       payload || {};
     const receiptItems = items.map((item) => ({
@@ -1510,7 +1814,8 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
       note,
       attachment,
       items: receiptItems,
-      transferredAt: draft ? "" : new Date().toISOString()
+      transferredAt: draft ? "" : new Date().toISOString(),
+      periodYear
     });
     data.stockReceipts = receiptRecord;
     if (!draft) {
@@ -1594,6 +1899,11 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
 
   ipcMain.handle("stocks:movement", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { stockName, type, quantity, note, createdAt } = payload;
     const normalizedName = normalizeStockName(stockName);
     data.stockMovements = createRecord(data.stockMovements, {
@@ -1601,7 +1911,8 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
       type,
       quantity: Number(quantity || 0),
       note,
-      createdAt
+      createdAt,
+      periodYear
     });
     data.stocks = data.stocks.map((stock) => {
       if (stock.normalizedName !== normalizedName && stock.name !== stockName) {
@@ -1705,20 +2016,27 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
 
   ipcMain.handle("cash:create", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const customerName =
       payload.customerName ||
       data.customers.find((customer) => customer.id === payload.customerId)?.name ||
       "";
     data.cashTransactions = createRecord(data.cashTransactions, {
       ...payload,
-      customerName
+      customerName,
+      periodYear
     });
     addLedgerEntry(data, {
       accountCode: payload.type === "gider" ? "320" : "100",
       accountName: payload.type === "gider" ? "SATICILAR" : "KASA",
       debit: payload.type === "gider" ? 0 : normalizeNumber(payload.amount),
       credit: payload.type === "gider" ? normalizeNumber(payload.amount) : 0,
-      note: payload.note || "Kasa hareketi"
+      note: payload.note || "Kasa hareketi",
+      periodYear
     });
     addAuditLog(data, {
       module: "cash",
@@ -1733,7 +2051,12 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
 
   ipcMain.handle("invoices:create", async (_event, payload) => {
     const data = await loadStorage();
-    data.invoices = createRecord(data.invoices, payload);
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
+    data.invoices = createRecord(data.invoices, { ...payload, periodYear });
     addAuditLog(data, {
       module: "invoices",
       action: "create",
@@ -1760,7 +2083,12 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
   });
   ipcMain.handle("proposals:create", async (_event, payload) => {
     const data = await loadStorage();
-    data.proposals = createRecord(data.proposals, payload);
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
+    data.proposals = createRecord(data.proposals, { ...payload, periodYear });
     addAuditLog(data, {
       module: "proposals",
       action: "create",
@@ -1775,11 +2103,16 @@ ipcMain.handle("stocks:create", async (_event, payload) => {
   
   ipcMain.handle("proposals:update", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { proposalId, patch } = payload || {};
     if (!proposalId) return data;
     data.proposals = (data.proposals || []).map((proposal) => {
       if (proposal.id !== proposalId) return proposal;
-      return { ...proposal, ...patch };
+      return { ...proposal, ...patch, periodYear };
     });
     addAuditLog(data, {
       module: "proposals",
@@ -1814,13 +2147,19 @@ ipcMain.handle("proposals:delete", async (_event, payload) => {
 
   ipcMain.handle("sales:create", async (_event, payload) => {
     const data = await loadStorage();
+    const settings = await loadSettings();
+    const periodYear = getCurrentPeriodYear(settings);
+    if (isPeriodLocked(data, periodYear)) {
+      throw new Error("Seçili dönem kilitli. İşlem yapılamaz.");
+    }
     const { customerId, customerName, items, total, vatRate } = payload;
     const saleRecord = {
       customerId,
       customerName,
       items,
       total,
-      vatRate
+      vatRate,
+      periodYear
     };
     data.sales = createRecord(data.sales, saleRecord);
     addLedgerEntry(data, {
@@ -1828,7 +2167,8 @@ ipcMain.handle("proposals:delete", async (_event, payload) => {
       accountName: "YURTİÇİ SATIŞLAR",
       debit: 0,
       credit: normalizeNumber(total),
-      note: `Satış: ${customerName || "Genel"}`
+      note: `Satış: ${customerName || "Genel"}`,
+      periodYear
     });
 
     if (customerId) {
@@ -1869,21 +2209,24 @@ ipcMain.handle("proposals:delete", async (_event, payload) => {
         stockName: normalizedName || item.name,
         type: "cikis",
         quantity: normalizeNumber(item.quantity),
-        note: `Satış: ${customerName || "Genel"}`
+        note: `Satış: ${customerName || "Genel"}`,
+        periodYear
       });
     });
 
     data.cashTransactions = createRecord(data.cashTransactions, {
       type: "gelir",
       amount: total,
-      note: `Satış: ${customerName || "Genel"}`
+      note: `Satış: ${customerName || "Genel"}`,
+      periodYear
     });
     addLedgerEntry(data, {
       accountCode: "100",
       accountName: "KASA",
       debit: normalizeNumber(total),
       credit: 0,
-      note: `Satış tahsilat: ${customerName || "Genel"}`
+      note: `Satış tahsilat: ${customerName || "Genel"}`,
+      periodYear
     });
     addAuditLog(data, {
       module: "sales",
@@ -1898,28 +2241,50 @@ ipcMain.handle("proposals:delete", async (_event, payload) => {
   });
 
   ipcMain.handle("report:generate", async (_event, payload) => {
-    const { title, html } = payload;
-    const reportsDir = path.join(
-      app.getPath("documents"),
-      "MTN-Muhasebe-Raporlar"
-    );
-    await fs.mkdir(reportsDir, { recursive: true });
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const reportFile = path.join(reportsDir, `${title}-${timestamp}.pdf`);
-    const reportWindow = new BrowserWindow({
-      show: false,
-      webPreferences: {
-        sandbox: false
-      }
-    });
-    const content = `<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><style>body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#1f2a44;position:relative}h1{font-size:20px;margin-bottom:6px}.report-frame{border:2px solid #0f172a;border-radius:12px;padding:20px;min-height:720px}.report-header{display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:16px;gap:18px}.report-header p{margin:4px 0;font-size:11px;color:#516081}.report-header--corporate{align-items:stretch}.report-header--offer{align-items:flex-start}.report-brand{display:flex;align-items:center;gap:12px}.report-brand h1{font-size:18px;margin:0}.report-meta{max-width:420px;font-size:11px;color:#516081}.report-meta h1{margin-bottom:6px}.report-meta p{margin:2px 0}.report-logo-block{display:flex;align-items:flex-start;justify-content:flex-start;min-width:140px}.report-logo{font-size:28px;font-weight:700;color:#1f2a44}.report-logo-img{width:120px;max-height:70px;object-fit:contain;background:#fff;border-radius:8px;padding:6px;border:1px solid #e2e8f0}.report-logo-img--mono{filter:grayscale(1) contrast(1.1)}.report-watermark{position:fixed;top:35%;left:10%;right:10%;text-align:center;font-size:48px;color:rgba(0,76,140,0.1);transform:rotate(-18deg);z-index:0}.report-watermark img{width:220px;opacity:0.08}table{width:100%;border-collapse:collapse;font-size:12px;position:relative;z-index:1}th,td{border:1px solid #d7deef;padding:8px;text-align:left}th{background:#f2f5fb}</style></head><body>${html}</body></html>`;
-    await reportWindow.loadURL(
-      `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
-    );
-    const pdfBuffer = await reportWindow.webContents.printToPDF({});
-    await fs.writeFile(reportFile, pdfBuffer);
-    reportWindow.close();
-    return { reportFile };
+    const { title, html, docNo } = payload || {};
+    try {
+      const reportsDir = path.join(
+        app.getPath("documents"),
+        "MTN-Muhasebe-Raporlar"
+      );
+      await fs.mkdir(reportsDir, { recursive: true });
+      const stamp = new Date();
+      const datePart = stamp
+        .toISOString()
+        .slice(0, 10)
+        .replace(/-/g, "");
+      const timePart = stamp
+        .toISOString()
+        .slice(11, 16)
+        .replace(":", "");
+      const safeTitle = String(title || "RAPOR")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      const safeDocNo = docNo
+        ? String(docNo).replace(/[^A-Z0-9]+/g, "_")
+        : "";
+      const fileName = `${safeTitle}_${datePart}${timePart}${
+        safeDocNo ? `_${safeDocNo}` : ""
+      }.pdf`;
+      const reportFile = path.join(reportsDir, fileName);
+      const reportWindow = new BrowserWindow({
+        show: false,
+        webPreferences: {
+          sandbox: false
+        }
+      });
+      const content = `<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><style>body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#1f2a44;position:relative}h1{font-size:20px;margin-bottom:6px}.report-frame{border:2px solid #0f172a;border-radius:12px;padding:20px;min-height:720px}.report-header{display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:16px;gap:18px}.report-header p{margin:4px 0;font-size:11px;color:#516081}.report-header--corporate{align-items:stretch}.report-header--offer{align-items:flex-start}.report-brand{display:flex;align-items:center;gap:12px}.report-brand h1{font-size:18px;margin:0}.report-meta{max-width:420px;font-size:11px;color:#516081}.report-meta h1{margin-bottom:6px}.report-meta p{margin:2px 0}.report-logo-block{display:flex;align-items:flex-start;justify-content:flex-start;min-width:140px}.report-logo{font-size:28px;font-weight:700;color:#1f2a44}.report-logo-img{width:120px;max-height:70px;object-fit:contain;background:#fff;border-radius:8px;padding:6px;border:1px solid #e2e8f0}.report-logo-img--mono{filter:grayscale(1) contrast(1.1)}.report-watermark{position:fixed;top:35%;left:10%;right:10%;text-align:center;font-size:48px;color:rgba(0,76,140,0.1);transform:rotate(-18deg);z-index:0}.report-watermark img{width:220px;opacity:0.08}table{width:100%;border-collapse:collapse;font-size:12px;position:relative;z-index:1}th,td{border:1px solid #d7deef;padding:8px;text-align:left}th{background:#f2f5fb}</style></head><body>${html}</body></html>`;
+      await reportWindow.loadURL(
+        `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
+      );
+      const pdfBuffer = await reportWindow.webContents.printToPDF({});
+      await fs.writeFile(reportFile, pdfBuffer);
+      reportWindow.close();
+      return { reportFile };
+    } catch (error) {
+      return { error: error.message || "PDF oluşturulamadı." };
+    }
   });
 
   app.on("activate", () => {
@@ -1951,4 +2316,3 @@ ipcMain.handle("stocks:import-analyze", async (_event, payload) => {
     return { ok: false, error: error.message || String(error), rows: [], summary: {}, report: { rows: [] } };
   }
 });
-
