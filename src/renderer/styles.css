@@ -3127,3 +3127,46 @@ p,small,span,label{ color: rgba(242,246,255,.86); }
   align-items:center;
   flex-wrap:wrap;
 }
+
+/* MTN v22: Yönetici seviyesi arayüz polisajı */
+.topbar{
+  background: linear-gradient(135deg, rgba(22, 35, 64, 0.98), rgba(12, 22, 40, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.topbar__logo{
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.status-pill{
+  background: rgba(9, 18, 36, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sidebar{
+  box-shadow: 0 22px 40px rgba(3, 8, 20, 0.4);
+}
+
+.chip{
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  font-weight: 600;
+  letter-spacing: 0.15px;
+}
+
+.chip--active{
+  background: linear-gradient(135deg, rgba(47, 107, 255, 0.25), rgba(47, 107, 255, 0.08));
+  border-color: rgba(47, 107, 255, 0.6);
+  box-shadow: 0 8px 16px rgba(47, 107, 255, 0.18);
+}
+
+.chip__count{
+  background: rgba(9, 18, 36, 0.75);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.search{
+  background: rgba(9, 16, 31, 0.7);
+  border-color: rgba(255, 255, 255, 0.16);
+}
