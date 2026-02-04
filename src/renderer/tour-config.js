@@ -50,7 +50,7 @@ window.MTN_TOUR_CONFIG = {
       description: "Yeni stok ekleme ve düzenleme."
     }
   ],
-main
+
   "ledger-panel": [
     {
       selector: "#ledger-module",

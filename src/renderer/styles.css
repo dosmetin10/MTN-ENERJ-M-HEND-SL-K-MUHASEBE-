@@ -734,6 +734,7 @@ body {
 }
 
 
+
 .form-grid input,
 .form-grid select {
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1455,6 +1456,7 @@ body {
   inset: 0;
   display: none;
   z-index: 1500;
+
 }
 
 .tour-overlay.is-visible {
@@ -2456,27 +2458,22 @@ tr.is-cancelled {
 
 #customer-list-section .table-card,
 #stock-list-card {
-
+ain
 }
 
 #customer-table thead th,
 #stock-list-card thead th {
-
+in
   font-weight: 700;
 }
 
 #customer-table tbody tr:nth-child(even),
 #stock-list-card tbody tr:nth-child(even) {
- main
+ain
 }
 
 #customer-table tbody tr:hover td,
 #stock-list-card tbody tr:hover td {
-
-}
-
-#customer-table td,
-#stock-list-card td {
 
 }
 
@@ -2512,47 +2509,12 @@ tr.is-cancelled {
   color: #f8fafc;
 }
 
-#customer-table th:nth-child(1),
-#customer-table td:nth-child(1) {
-  width: 110px;
-  white-space: nowrap;
-}
 
-#customer-table th:nth-child(2),
-#customer-table td:nth-child(2) {
-  min-width: 220px;
-}
-
-#customer-table th:nth-child(4),
-#customer-table td:nth-child(4) {
-  width: 140px;
-  white-space: nowrap;
-}
-
-#customer-table th:nth-child(7) {
-  min-width: 140px;
-}
-
-#stock-list-card th,
-#stock-list-card td {
-  white-space: nowrap;
-}
-
-#stock-list-card th:nth-child(2),
-#stock-list-card td:nth-child(2) {
-  min-width: 200px;
-}
 #customer-table td:nth-child(7) .badge {
   display: inline-flex;
   justify-content: flex-end;
   min-width: 110px;
-}
 
-.status-badges {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
 }
 #customer-table td:nth-child(1){
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -2627,7 +2589,7 @@ tr.is-cancelled {
 .splash__logo{
   width: 88px;
   height: 88px;
-main
+ain
   animation: mtnLogoFloat 2.6s ease-in-out infinite;
 }
 @keyframes mtnLogoFloat{
@@ -2649,7 +2611,7 @@ main
   height:100%;
   width: 40%;
   border-radius: 999px;
-
+main
   animation: mtnLoad 1.4s linear infinite;
 }
 @keyframes mtnLoad{
