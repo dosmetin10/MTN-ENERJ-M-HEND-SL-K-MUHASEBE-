@@ -50,33 +50,7 @@ window.MTN_TOUR_CONFIG = {
       description: "Yeni stok ekleme ve düzenleme."
     }
   ],
-  "stock-list-panel": [
-    {
-      selector: "#stock-list-search",
-      title: "Malzeme Arama",
-      description: "Stok kodu veya adına göre filtreleyin."
-    },
-    {
-      selector: "#stock-list-unit-filter",
-      title: "Birim Filtresi",
-      description: "Birim tipine göre listeyi daraltın."
-    },
-    {
-      selector: "#stock-list-warehouse-filter",
-      title: "Depo Filtresi",
-      description: "Depo bazlı stokları hızlıca bulun."
-    },
-    {
-      selector: "#stock-list-new",
-      title: "Yeni Malzeme",
-      description: "Yeni malzeme kartı oluşturmak için kullanın."
-    },
-    {
-      selector: "#stock-list-table",
-      title: "Malzeme Tablosu",
-      description: "Stok durumu ve güncellemeleri burada görürsünüz."
-    }
-  ],
+main
   "ledger-panel": [
     {
       selector: "#ledger-module",

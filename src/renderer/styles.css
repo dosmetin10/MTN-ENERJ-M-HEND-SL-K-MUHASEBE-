@@ -1455,7 +1455,6 @@ body {
   inset: 0;
   display: none;
   z-index: 1500;
-  pointer-events: none;
 }
 
 .tour-overlay.is-visible {
@@ -1477,7 +1476,7 @@ body {
   border-radius: 14px;
   max-width: 320px;
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.2);
-  pointer-events: auto;
+
 }
 
 .tour-overlay__actions {
@@ -2457,40 +2456,28 @@ tr.is-cancelled {
 
 #customer-list-section .table-card,
 #stock-list-card {
-  background: linear-gradient(180deg, rgba(20, 33, 60, 0.98), rgba(14, 25, 45, 0.98));
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 28px rgba(5, 12, 24, 0.35);
+
 }
 
 #customer-table thead th,
 #stock-list-card thead th {
-  background: rgba(9, 18, 36, 0.9);
-  color: var(--ink);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
   font-weight: 700;
 }
 
 #customer-table tbody tr:nth-child(even),
 #stock-list-card tbody tr:nth-child(even) {
-  background: rgba(9, 16, 31, 0.55);
+ main
 }
 
 #customer-table tbody tr:hover td,
 #stock-list-card tbody tr:hover td {
-  background: rgba(47, 107, 255, 0.12);
+
 }
 
 #customer-table td,
 #stock-list-card td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
 
-#customer-table th,
-#customer-table td,
-#stock-list-card th,
-#stock-list-card td {
-  font-size: 13px;
-  line-height: 1.4;
 }
 
 #customer-table td, #customer-table th{
@@ -2640,7 +2627,7 @@ tr.is-cancelled {
 .splash__logo{
   width: 88px;
   height: 88px;
-  filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.08));
+main
   animation: mtnLogoFloat 2.6s ease-in-out infinite;
 }
 @keyframes mtnLogoFloat{
@@ -2662,7 +2649,7 @@ tr.is-cancelled {
   height:100%;
   width: 40%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #1d4ed8, rgba(255,200,120,.5), #1d4ed8);
+
   animation: mtnLoad 1.4s linear infinite;
 }
 @keyframes mtnLoad{
