@@ -2717,6 +2717,7 @@ const renderCustomers = (items) => {
           ? "badge badge--income"
           : "badge";
     const dueDate = getCustomerDueDate(item);
+    const dueLabel = dueDate ? dueDate.toLocaleDateString("tr-TR") : "";
     const isDueSoon =
       balanceValue > 0 &&
       dueDate &&
@@ -2749,14 +2750,17 @@ const renderCustomers = (items) => {
       <td>${item.email || "-"}</td>
       <td><span class="${balanceBadgeClass}">${formatCurrency(balanceValue)}</span></td>
       <td>
-        <span class="badge ${isActive ? "badge--income" : "badge--expense"}">
-          ${isActive ? "Aktif" : "Pasif"}
-        </span>
-        ${
-          isDueSoon
-            ? `<span class="badge badge--warning">Vade Yakın</span>`
-            : ""
-        }
+        <div class="status-badges">
+          <span class="badge ${isActive ? "badge--income" : "badge--expense"}">
+            ${isActive ? "Aktif" : "Pasif"}
+          </span>
+          ${
+            isDueSoon
+              ? `<span class="badge badge--warning">Vade Yakın</span>`
+              : ""
+          }
+          ${dueLabel ? `<span class="badge badge--info">Vade: ${dueLabel}</span>` : ""}
+        </div>
       </td>
       <td>
         <button class="ghost ghost--sm" type="button" data-action="customer-detail">Detay</button>
