@@ -2241,28 +2241,50 @@ ipcMain.handle("proposals:delete", async (_event, payload) => {
   });
 
   ipcMain.handle("report:generate", async (_event, payload) => {
-    const { title, html } = payload;
-    const reportsDir = path.join(
-      app.getPath("documents"),
-      "MTN-Muhasebe-Raporlar"
-    );
-    await fs.mkdir(reportsDir, { recursive: true });
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const reportFile = path.join(reportsDir, `${title}-${timestamp}.pdf`);
-    const reportWindow = new BrowserWindow({
-      show: false,
-      webPreferences: {
-        sandbox: false
-      }
-    });
-    const content = `<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><style>body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#1f2a44;position:relative}h1{font-size:20px;margin-bottom:6px}.report-frame{border:2px solid #0f172a;border-radius:12px;padding:20px;min-height:720px}.report-header{display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:16px;gap:18px}.report-header p{margin:4px 0;font-size:11px;color:#516081}.report-header--corporate{align-items:stretch}.report-header--offer{align-items:flex-start}.report-brand{display:flex;align-items:center;gap:12px}.report-brand h1{font-size:18px;margin:0}.report-meta{max-width:420px;font-size:11px;color:#516081}.report-meta h1{margin-bottom:6px}.report-meta p{margin:2px 0}.report-logo-block{display:flex;align-items:flex-start;justify-content:flex-start;min-width:140px}.report-logo{font-size:28px;font-weight:700;color:#1f2a44}.report-logo-img{width:120px;max-height:70px;object-fit:contain;background:#fff;border-radius:8px;padding:6px;border:1px solid #e2e8f0}.report-logo-img--mono{filter:grayscale(1) contrast(1.1)}.report-watermark{position:fixed;top:35%;left:10%;right:10%;text-align:center;font-size:48px;color:rgba(0,76,140,0.1);transform:rotate(-18deg);z-index:0}.report-watermark img{width:220px;opacity:0.08}table{width:100%;border-collapse:collapse;font-size:12px;position:relative;z-index:1}th,td{border:1px solid #d7deef;padding:8px;text-align:left}th{background:#f2f5fb}</style></head><body>${html}</body></html>`;
-    await reportWindow.loadURL(
-      `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
-    );
-    const pdfBuffer = await reportWindow.webContents.printToPDF({});
-    await fs.writeFile(reportFile, pdfBuffer);
-    reportWindow.close();
-    return { reportFile };
+    const { title, html, docNo } = payload || {};
+    try {
+      const reportsDir = path.join(
+        app.getPath("documents"),
+        "MTN-Muhasebe-Raporlar"
+      );
+      await fs.mkdir(reportsDir, { recursive: true });
+      const stamp = new Date();
+      const datePart = stamp
+        .toISOString()
+        .slice(0, 10)
+        .replace(/-/g, "");
+      const timePart = stamp
+        .toISOString()
+        .slice(11, 16)
+        .replace(":", "");
+      const safeTitle = String(title || "RAPOR")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      const safeDocNo = docNo
+        ? String(docNo).replace(/[^A-Z0-9]+/g, "_")
+        : "";
+      const fileName = `${safeTitle}_${datePart}${timePart}${
+        safeDocNo ? `_${safeDocNo}` : ""
+      }.pdf`;
+      const reportFile = path.join(reportsDir, fileName);
+      const reportWindow = new BrowserWindow({
+        show: false,
+        webPreferences: {
+          sandbox: false
+        }
+      });
+      const content = `<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><style>body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#1f2a44;position:relative}h1{font-size:20px;margin-bottom:6px}.report-frame{border:2px solid #0f172a;border-radius:12px;padding:20px;min-height:720px}.report-header{display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:16px;gap:18px}.report-header p{margin:4px 0;font-size:11px;color:#516081}.report-header--corporate{align-items:stretch}.report-header--offer{align-items:flex-start}.report-brand{display:flex;align-items:center;gap:12px}.report-brand h1{font-size:18px;margin:0}.report-meta{max-width:420px;font-size:11px;color:#516081}.report-meta h1{margin-bottom:6px}.report-meta p{margin:2px 0}.report-logo-block{display:flex;align-items:flex-start;justify-content:flex-start;min-width:140px}.report-logo{font-size:28px;font-weight:700;color:#1f2a44}.report-logo-img{width:120px;max-height:70px;object-fit:contain;background:#fff;border-radius:8px;padding:6px;border:1px solid #e2e8f0}.report-logo-img--mono{filter:grayscale(1) contrast(1.1)}.report-watermark{position:fixed;top:35%;left:10%;right:10%;text-align:center;font-size:48px;color:rgba(0,76,140,0.1);transform:rotate(-18deg);z-index:0}.report-watermark img{width:220px;opacity:0.08}table{width:100%;border-collapse:collapse;font-size:12px;position:relative;z-index:1}th,td{border:1px solid #d7deef;padding:8px;text-align:left}th{background:#f2f5fb}</style></head><body>${html}</body></html>`;
+      await reportWindow.loadURL(
+        `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
+      );
+      const pdfBuffer = await reportWindow.webContents.printToPDF({});
+      await fs.writeFile(reportFile, pdfBuffer);
+      reportWindow.close();
+      return { reportFile };
+    } catch (error) {
+      return { error: error.message || "PDF oluşturulamadı." };
+    }
   });
 
   app.on("activate", () => {

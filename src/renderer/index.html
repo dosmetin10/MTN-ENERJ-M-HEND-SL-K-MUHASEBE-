@@ -611,6 +611,12 @@
                   <button class="chip chip--active" data-customer-filter="all">
                     Hepsi <span class="chip__count" id="customer-filter-all-count">0</span>
                   </button>
+                  <button class="chip" data-customer-filter="active">
+                    Aktif <span class="chip__count" id="customer-filter-active-count">0</span>
+                  </button>
+                  <button class="chip" data-customer-filter="inactive">
+                    Pasif <span class="chip__count" id="customer-filter-inactive-count">0</span>
+                  </button>
                   <button class="chip" data-customer-filter="debtors">
                     Borçlular <span class="chip__count" id="customer-filter-debtors-count">0</span>
                   </button>
@@ -664,7 +670,7 @@
                   Cari Kodu
                   <input name="code" placeholder="Otomatik" readonly />
                 </label>
-                <label>
+                <label class="is-required">
                   Cari Tipi
                   <select name="type">
                     <option value="musteri">Müşteri</option>
@@ -672,8 +678,8 @@
                     <option value="usta">Usta/Personel</option>
                   </select>
                 </label>
-                <label>
-                  Ünvan / Ad Soyad
+                <label class="is-required">
+                  Ünvan / Ad Soyad <span class="field-required">*</span>
                   <input name="name" required placeholder="Müşteri adı" />
                 </label>
                 <label>
@@ -1397,7 +1403,18 @@
                 <div class="table-actions">
                   <input id="stock-list-search" class="search" placeholder="Stok adı / kodu / Q-DN ara..." />
                   <button class="ghost" id="stock-list-search-btn">Ara</button>
+                  <button class="ghost" id="stock-list-new">Yeni Malzeme</button>
                   <button class="primary" id="stock-list-add-to-sale">Toplu Satışa Aktar</button>
+                </div>
+                <div class="filter-bar">
+                  <label>
+                    Birim
+                    <input id="stock-list-unit-filter" placeholder="Adet / m / kg" />
+                  </label>
+                  <label>
+                    Depo
+                    <input id="stock-list-warehouse-filter" placeholder="Ana Depo" />
+                  </label>
                 </div>
                 <p class="search-hint" id="stock-list-empty"></p>
                 <div class="table-card table-card--sheet">

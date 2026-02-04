@@ -141,6 +141,12 @@ const customerFilterButtons = document.querySelectorAll(
 const customerFilterAllCount = document.getElementById(
   "customer-filter-all-count"
 );
+const customerFilterActiveCount = document.getElementById(
+  "customer-filter-active-count"
+);
+const customerFilterInactiveCount = document.getElementById(
+  "customer-filter-inactive-count"
+);
 const customerFilterDebtorsCount = document.getElementById(
   "customer-filter-debtors-count"
 );
@@ -248,6 +254,11 @@ const receiptFilterStatusSelect = document.getElementById(
 );
 const stockListSearchInput = document.getElementById("stock-list-search");
 const stockListSearchButton = document.getElementById("stock-list-search-btn");
+const stockListNewButton = document.getElementById("stock-list-new");
+const stockListUnitFilter = document.getElementById("stock-list-unit-filter");
+const stockListWarehouseFilter = document.getElementById(
+  "stock-list-warehouse-filter"
+);
 const stockListAddToSaleButton = document.getElementById(
   "stock-list-add-to-sale"
 );
@@ -2611,6 +2622,12 @@ const renderCustomers = (items) => {
   if (activeCustomerFilter === "creditors") {
     filtered = filtered.filter((item) => Number(item.balance || 0) < 0);
   }
+  if (activeCustomerFilter === "active") {
+    filtered = filtered.filter((item) => item.isActive !== false);
+  }
+  if (activeCustomerFilter === "inactive") {
+    filtered = filtered.filter((item) => item.isActive === false);
+  }
   if (activeCustomerFilter === "due") {
     const now = Date.now();
     const horizon = now + 7 * DAYS_IN_MS;
@@ -2626,6 +2643,16 @@ const renderCustomers = (items) => {
   }
   if (customerFilterAllCount) {
     customerFilterAllCount.textContent = items.length;
+  }
+  if (customerFilterActiveCount) {
+    customerFilterActiveCount.textContent = items.filter(
+      (item) => item.isActive !== false
+    ).length;
+  }
+  if (customerFilterInactiveCount) {
+    customerFilterInactiveCount.textContent = items.filter(
+      (item) => item.isActive === false
+    ).length;
   }
   if (customerFilterDebtorsCount) {
     customerFilterDebtorsCount.textContent = items.filter(
@@ -2690,6 +2717,7 @@ const renderCustomers = (items) => {
           ? "badge badge--income"
           : "badge";
     const dueDate = getCustomerDueDate(item);
+    const dueLabel = dueDate ? dueDate.toLocaleDateString("tr-TR") : "";
     const isDueSoon =
       balanceValue > 0 &&
       dueDate &&
@@ -2722,14 +2750,17 @@ const renderCustomers = (items) => {
       <td>${item.email || "-"}</td>
       <td><span class="${balanceBadgeClass}">${formatCurrency(balanceValue)}</span></td>
       <td>
-        <span class="badge ${isActive ? "badge--income" : "badge--expense"}">
-          ${isActive ? "Aktif" : "Pasif"}
-        </span>
-        ${
-          isDueSoon
-            ? `<span class="badge badge--warning">Vade Yakın</span>`
-            : ""
-        }
+        <div class="status-badges">
+          <span class="badge ${isActive ? "badge--income" : "badge--expense"}">
+            ${isActive ? "Aktif" : "Pasif"}
+          </span>
+          ${
+            isDueSoon
+              ? `<span class="badge badge--warning">Vade Yakın</span>`
+              : ""
+          }
+          ${dueLabel ? `<span class="badge badge--info">Vade: ${dueLabel}</span>` : ""}
+        </div>
       </td>
       <td>
         <button class="ghost ghost--sm" type="button" data-action="customer-detail">Detay</button>
@@ -3172,6 +3203,8 @@ const renderStockList = (items) => {
   }
   stockListTable.innerHTML = "";
   const searchTerm = normalizeText(stockListSearchInput?.value);
+  const unitTerm = normalizeText(stockListUnitFilter?.value);
+  const warehouseTerm = normalizeText(stockListWarehouseFilter?.value);
   const filtered = searchTerm
     ? items.filter((item) => {
         const name = normalizeText(item.name);
@@ -3184,7 +3217,14 @@ const renderStockList = (items) => {
         );
       })
     : items;
-  filtered.forEach((item) => {
+  const refined = filtered.filter((item) => {
+    const unit = normalizeText(item.unit);
+    const warehouse = normalizeText(item.warehouse);
+    const unitOk = unitTerm ? unit.includes(unitTerm) : true;
+    const warehouseOk = warehouseTerm ? warehouse.includes(warehouseTerm) : true;
+    return unitOk && warehouseOk;
+  });
+  refined.forEach((item) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><input type="checkbox" data-stock-id="${item.id || ""}" /></td>
@@ -3203,8 +3243,9 @@ const renderStockList = (items) => {
     stockListTable.appendChild(row);
   });
   if (stockListEmptyEl) {
+    const hasFilters = Boolean(searchTerm || unitTerm || warehouseTerm);
     stockListEmptyEl.textContent =
-      searchTerm && !filtered.length
+      hasFilters && !refined.length
         ? "Aradığınız kriterlere uygun stok bulunamadı."
         : "";
   }
@@ -4228,6 +4269,7 @@ const renderAssistant = (data) => {
     return;
   }
   const cashTransactions = data.cashTransactions || [];
+  const stockMovements = data.stockMovements || [];
   const totalIncome = cashTransactions
     .filter((item) => item.type === "gelir")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
@@ -4241,6 +4283,20 @@ const renderAssistant = (data) => {
     (sum, item) => sum + Number(item.quantity || 0),
     0
   );
+  const now = Date.now();
+  const staleCutoff = now - 90 * DAYS_IN_MS;
+  const movementMap = new Map();
+  stockMovements.forEach((movement) => {
+    const key = normalizeText(movement.stockName || "");
+    if (!key || !movement.createdAt) {
+      return;
+    }
+    const date = new Date(movement.createdAt);
+    const prev = movementMap.get(key);
+    if (!prev || date > prev) {
+      movementMap.set(key, date);
+    }
+  });
 
   const daily = [
     `Kasa neti: ${formatCurrency(cashBalance)}`,
@@ -4253,13 +4309,58 @@ const renderAssistant = (data) => {
     const threshold = Number(item.threshold || 0);
     return threshold > 0 && Number(item.quantity || 0) <= threshold;
   });
+  const overdueCustomers = (data.customers || [])
+    .map((item) => ({
+      ...item,
+      dueDate: getCustomerDueDate(item)
+    }))
+    .filter(
+      (item) =>
+        Number(item.balance || 0) > 0 &&
+        item.dueDate &&
+        item.dueDate.getTime() < now
+    )
+    .sort((a, b) => a.dueDate - b.dueDate);
+  const staleStocks = (data.stocks || []).filter((item) => {
+    const qty = Number(item.quantity || 0);
+    if (qty <= 0) {
+      return false;
+    }
+    const key = normalizeText(item.normalizedName || item.name || "");
+    if (!key) {
+      return false;
+    }
+    const lastMove = movementMap.get(key);
+    if (!lastMove) {
+      return true;
+    }
+    return lastMove.getTime() < staleCutoff;
+  });
   const pendingBalances = (data.customers || [])
     .filter((item) => Number(item.balance || 0) > 0)
+    .slice(0, 5);
+  const negativeStocks = (data.stocks || []).filter(
+    (item) => Number(item.quantity || 0) < 0
+  );
+  const inactiveWithBalance = (data.customers || [])
+    .filter((item) => item.isActive === false && Number(item.balance || 0) !== 0)
     .slice(0, 5);
 
   const reminders = [
     ...lowStocks.slice(0, 5).map(
       (item) => `Kritik stok: ${item.name} (${item.quantity || 0})`
+    ),
+    ...negativeStocks.slice(0, 3).map(
+      (item) => `Negatif stok: ${item.name} (${item.quantity || 0})`
+    ),
+    ...overdueCustomers.slice(0, 4).map((item) => {
+      const dueLabel = item.dueDate
+        ? item.dueDate.toLocaleDateString("tr-TR")
+        : "-";
+      return `Vadesi geçen cari: ${item.name} (${dueLabel})`;
+    }),
+    ...staleStocks.slice(0, 4).map(
+      (item) => `Hareketsiz stok: ${item.name} (${item.quantity || 0})`
     ),
     ...pendingBalances.map(
       (item) => `Tahsilat bekleyen cari: ${item.name} (${formatCurrency(
@@ -4267,6 +4368,13 @@ const renderAssistant = (data) => {
       )})`
     )
   ];
+  reminders.push(
+    ...inactiveWithBalance.map(
+      (item) => `Pasif cari bakiyesi: ${item.name} (${formatCurrency(
+        Number(item.balance || 0)
+      )})`
+    )
+  );
   const paymentReminders = loadReminders().slice(0, 5).map(
     (item) => `Ödeme: ${item.title} (${getReminderLabel(item)})`
   );
@@ -4275,6 +4383,27 @@ const renderAssistant = (data) => {
   const suggestions = [];
   if (!currentSettings.enableAutoBackup) {
     suggestions.push("Otomatik yedeklemeyi aktif ederek veri güvenliğini artırın.");
+  }
+  if (cashBalance < 0) {
+    suggestions.push("Kasa bakiyesi negatif. Gider planı ve tahsilat takibini sıklaştırın.");
+  }
+  if (overdueCustomers.length) {
+    suggestions.push(
+      `Vadesi geçmiş ${overdueCustomers.length} cari var. Tahsilat planı oluşturun.`
+    );
+  }
+  if (staleStocks.length) {
+    suggestions.push(
+      `Hareket görmeyen ${staleStocks.length} stok kartı var. Devir/indirim planı yapın.`
+    );
+  }
+  if (negativeStocks.length) {
+    suggestions.push(
+      `Negatif stok (${negativeStocks.length}) bulundu. Depo hareketlerini kontrol edin.`
+    );
+  }
+  if (inactiveWithBalance.length) {
+    suggestions.push("Pasif carilerde bakiye var. Hesap durumlarını netleştirin.");
   }
   if (!lowStocks.length && totalStocks > 0) {
     suggestions.push("Kritik stok yok, periyodik sayım raporu almayı unutmayın.");
@@ -4532,6 +4661,14 @@ const initApp = async () => {
   }
 };
 
+const buildDocNo = (prefix, dateValue = new Date()) => {
+  const date = new Date(dateValue);
+  const safeDate = Number.isNaN(date.getTime()) ? new Date() : date;
+  const datePart = safeDate.toISOString().slice(0, 10).replace(/-/g, "");
+  const timePart = safeDate.toISOString().slice(11, 16).replace(":", "");
+  return `${prefix}-${datePart}${timePart}`;
+};
+
 const buildReportTable = (title, headers, rows, options = {}) => {
   const headerCells = headers.map((header) => `<th>${header}</th>`).join("");
   const rowHtml = rows
@@ -4543,6 +4680,9 @@ const buildReportTable = (title, headers, rows, options = {}) => {
     )
     .join("");
   const { includeWatermark = false } = options;
+  const reportDateValue = options.reportDate || new Date();
+  const reportDate = new Date(reportDateValue).toLocaleString("tr-TR");
+  const reportNo = options.docNo || buildDocNo("RPR", reportDateValue);
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
@@ -4560,6 +4700,8 @@ const buildReportTable = (title, headers, rows, options = {}) => {
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Rapor Tarihi: ${escapeHtml(reportDate)}</p>
         </div>
       </div>
   `;
@@ -4581,7 +4723,7 @@ const buildReportTable = (title, headers, rows, options = {}) => {
   `;
 };
 
-const buildInvoiceHtml = (title, rows) => {
+const buildInvoiceHtml = (title, rows, meta = {}) => {
   const rowHtml = rows
     .map(
       (row) =>
@@ -4590,6 +4732,9 @@ const buildInvoiceHtml = (title, rows) => {
           .join("")}</tr>`
     )
     .join("");
+  const reportDateValue = meta.reportDate || new Date();
+  const reportDate = new Date(reportDateValue).toLocaleString("tr-TR");
+  const reportNo = meta.docNo || buildDocNo("SAT", reportDateValue);
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
@@ -4607,6 +4752,8 @@ const buildInvoiceHtml = (title, rows) => {
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Tarih: ${escapeHtml(reportDate)}</p>
         </div>
       </div>
       <div class="report-watermark">${
@@ -4647,8 +4794,12 @@ const buildReceiptHtml = ({
   paymentMethod,
   note,
   createdAt,
-  title
+  title,
+  docNo
 }) => {
+  const reportDateValue = createdAt || new Date();
+  const reportDate = new Date(reportDateValue).toLocaleString("tr-TR");
+  const reportNo = docNo || buildDocNo("MKZ", reportDateValue);
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
@@ -4666,13 +4817,13 @@ const buildReceiptHtml = ({
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Tarih: ${escapeHtml(reportDate)}</p>
         </div>
       </div>
       <table>
         <tbody>
-          <tr><th>Tarih</th><td>${escapeHtml(
-            new Date(createdAt).toLocaleString("tr-TR")
-          )}</td></tr>
+          <tr><th>İşlem Tarihi</th><td>${escapeHtml(reportDate)}</td></tr>
           <tr><th>Cari</th><td>${escapeHtml(customerName || "-")}</td></tr>
           <tr><th>Ödeme Türü</th><td>${escapeHtml(paymentMethod || "-")}</td></tr>
           <tr><th>Tutar</th><td>${escapeHtml(formatCurrency(amount))}</td></tr>
@@ -4761,6 +4912,8 @@ const buildCustomerFullReportHtml = (customerName, ledgerRows, jobRows, totals) 
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
   const logoSrc = currentSettings.logoDataUrl || "";
+  const reportDate = new Date();
+  const reportNo = buildDocNo("CARI", reportDate);
   const logoHtml = logoSrc
     ? `<img class="report-logo-img" src="${logoSrc}" alt="Firma logosu" />`
     : `<div class="report-logo">MTN</div>`;
@@ -4785,7 +4938,8 @@ const buildCustomerFullReportHtml = (customerName, ledgerRows, jobRows, totals) 
           <h1>${escapeHtml(companyName)}</h1>
           <p>${escapeHtml(customerName)}</p>
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(taxNumber)}</p>
-          <p>${new Date().toLocaleString("tr-TR")}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>${reportDate.toLocaleString("tr-TR")}</p>
         </div>
       </div>
       ${watermark}
@@ -4827,6 +4981,8 @@ const buildCustomerJobsInvoiceHtml = (customerName, jobs, totals) => {
   const companyName = currentSettings.companyName || "MTN Enerji";
   const taxOffice = currentSettings.taxOffice || "Vergi Dairesi";
   const taxNumber = currentSettings.taxNumber || "0000000000";
+  const reportDate = new Date();
+  const reportNo = buildDocNo("IS", reportDate);
   const logoSrc = currentSettings.logoDataUrl || "";
   const logoHtml = logoSrc
     ? `<img class="report-logo-img" src="${logoSrc}" alt="Firma logosu" />`
@@ -4844,6 +5000,8 @@ const buildCustomerJobsInvoiceHtml = (customerName, jobs, totals) => {
           <p>Vergi Dairesi: ${escapeHtml(taxOffice)} • Vergi No: ${escapeHtml(
             taxNumber
           )}</p>
+          <p>Belge No: ${escapeHtml(reportNo)}</p>
+          <p>Tarih: ${escapeHtml(reportDate.toLocaleString("tr-TR"))}</p>
         </div>
       </div>
       ${watermark}
@@ -4874,6 +5032,25 @@ const buildCustomerJobsInvoiceHtml = (customerName, jobs, totals) => {
       </div>
     </div>
   `;
+};
+
+const handleReportResult = (result, statusEl, label = "Rapor") => {
+  if (!result) {
+    return false;
+  }
+  if (result.error) {
+    const message = `${label} oluşturulamadı.`;
+    if (statusEl) {
+      statusEl.textContent = message;
+    }
+    setStatus(message);
+    console.error("PDF oluşturma hatası:", result.error);
+    return false;
+  }
+  if (statusEl && result.reportFile) {
+    statusEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
+  }
+  return true;
 };
 
 const generateReport = async (type) => {
@@ -4979,8 +5156,10 @@ const generateReport = async (type) => {
       type === "customers" || type === "cash" || type === "customer-balance"
   });
   const result = await window.mtnApp.generateReport({ title, html });
-  reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
-  await window.mtnApp?.openFile?.(result.reportFile);
+  const ok = handleReportResult(result, reportPathEl, title);
+  if (ok) {
+    await window.mtnApp?.openFile?.(result.reportFile);
+  }
 };
 
 if (customerForm) {
@@ -6117,6 +6296,24 @@ if (stockListSearchButton) {
   });
 }
 
+if (stockListUnitFilter) {
+  stockListUnitFilter.addEventListener("input", handleStockListSearch);
+}
+
+if (stockListWarehouseFilter) {
+  stockListWarehouseFilter.addEventListener("input", handleStockListSearch);
+}
+
+if (stockListNewButton) {
+  stockListNewButton.addEventListener("click", () => {
+    showPanel("stocks-panel", panelTitles["stocks-panel"]);
+    activateMenuByPanel("stocks-panel");
+    try {
+      stockForm?.elements?.name?.focus?.();
+    } catch (_) {}
+  });
+}
+
 if (stockColumnToggles.length) {
   stockColumnToggles.forEach((toggle) => {
     toggle.addEventListener("change", applyStockColumnVisibility);
@@ -7124,10 +7321,13 @@ if (detailReportButton) {
 
     const result = await window.mtnApp.generateReport({
       title: `Cari-Rapor-${customerName.replace(/\s+/g, "-")}`,
-      html
+      html,
+      docNo: customerId
     });
-    reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
-    await window.mtnApp?.openFile?.(result.reportFile);
+    const ok = handleReportResult(result, reportPathEl, "Cari Raporu");
+    if (ok) {
+      await window.mtnApp?.openFile?.(result.reportFile);
+    }
   });
 }
 
@@ -7153,7 +7353,7 @@ if (offerPdfButton) {
       title: "Satis-Faturasi",
       html
     });
-    reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
+    handleReportResult(result, reportPathEl, "Satış PDF");
   });
 }
 
@@ -7222,7 +7422,7 @@ if (offerPdfIndustrialButton) {
       title: "Endustriyel-Teklif",
       html
     });
-    reportPathEl.textContent = `Rapor kaydedildi: ${result.reportFile}`;
+    handleReportResult(result, reportPathEl, "Teklif PDF");
   });
 }
 
@@ -7303,8 +7503,10 @@ const saveProposal = async (type) => {
   );
   const report = await window.mtnApp.generateReport({
     title: isIndustrial ? "Endustriyel-Teklif" : "Ic-Tesisat-Teklif",
-    html
+    html,
+    docNo: offerNo
   });
+  const pdfOk = handleReportResult(report, reportPathEl, "Teklif PDF");
   const data = await window.mtnApp.createProposal({
     title: titleInput?.value || (isIndustrial ? "Endüstriyel Teklif" : "İç Tesisat Teklif"),
     type: isIndustrial ? "industrial" : "internal",
@@ -7324,7 +7526,7 @@ const saveProposal = async (type) => {
     createdAt: dateInput?.value
       ? `${dateInput.value}T${new Date().toTimeString().slice(0, 8)}`
       : new Date().toISOString(),
-    pdfPath: report.reportFile
+    pdfPath: pdfOk ? report.reportFile : ""
   });
   renderOffers(data.proposals || []);
   refreshAccountingPanels(data);
@@ -8649,7 +8851,8 @@ const showInlineTransactionForm = () => {
       if (window.mtnApp?.generateReport) {
         try {
           const html = `<h1>Tahsilat Makbuzu</h1><p>Cari: ${customer.name || ''}</p><p>Tutar: ${formatCurrency(Number(payload.amount || 0))}</p><p>Tarih: ${payload.createdAt}</p>`;
-          await window.mtnApp.generateReport({ title: 'Tahsilat Makbuzu', html });
+          const report = await window.mtnApp.generateReport({ title: 'Tahsilat Makbuzu', html });
+          handleReportResult(report, reportPathEl, "Tahsilat Makbuzu");
         } catch (_) {
           // ignore pdf generation errors
         }
@@ -8715,6 +8918,7 @@ const showInlineOfferForm = () => {
         try {
           const html = `<h1>${payload.title}</h1><p>Tutar: ${formatCurrency(payload.total)}</p>`;
           const report = await window.mtnApp.generateReport({ title: payload.title || 'Teklif', html });
+          handleReportResult(report, reportPathEl, "Teklif PDF");
           if (report?.reportFile) {
             pdfPath = report.reportFile;
           }
@@ -8886,7 +9090,8 @@ const showInlinePaymentForm = () => {
       if (window.mtnApp?.generateReport) {
         try {
           const html = `<h1>Ödeme Makbuzu</h1><p>Cari: ${customer.name || ''}</p><p>Tutar: ${formatCurrency(Number(payload.amount || 0))}</p><p>Tarih: ${payload.createdAt}</p>`;
-          await window.mtnApp.generateReport({ title: 'Ödeme Makbuzu', html });
+          const report = await window.mtnApp.generateReport({ title: 'Ödeme Makbuzu', html });
+          handleReportResult(report, reportPathEl, "Ödeme Makbuzu");
         } catch (_) {
           // ignore PDF errors
         }
