@@ -35,5 +35,8 @@
       "createStartMenuShortcut": true,
       "runAfterFinish": true
     }
+  },
+  "dependencies": {
+    "winston": "^3.19.0"
   }
 }
